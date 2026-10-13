@@ -1,18 +1,23 @@
-# Home Assistant dashboard card mirroring the CYD's page 1 (weather + haze),
-# in the Mecha Armor UI "Armor Plate" look.
+# Home Assistant dashboard card mirroring the CYD's page 1, in the Mecha Armor
+# UI "Armor Plate" look: 2x2 grid (CLOCK, WEATHER / PM2.5, PSI) at 2.2:1.
 #
-# Needs: custom:button-card (HACS > Frontend > "button-card").
-# Uses the same sensors as ha/packages/hazy_psi.yaml.
-# Clock: button-card only redraws when a listed entity changes. sensor.time
-# (Time & Date integration, "Time" option) makes the clock tick every minute;
-# without it the clock only updates when the haze/weather data changes.
+# Needs: custom:button-card (HACS > Frontend > "button-card") and the sensors from
+# ha/packages/hazy_psi.yaml. The clock uses the HA server's time (not the
+# tablet's), ticks every second (gold seconds) and shows "HA TIME" once synced.
 # Paste into a dashboard: Edit dashboard > Add card > Manual.
+#
+# Old-tablet safe: no optional chaining (?.), no flex "gap", sizes in vw so the
+# card scales with the screen. Sizes assume the card spans the full screen
+# width; if it sits in a narrower column, lower the vw numbers in `sz` below.
 
 type: custom:button-card
+grid_options:
+  columns: full
 show_name: false
 show_icon: false
 show_state: false
 tap_action: { action: none }
+aspect_ratio: 2.2/1
 triggers_update:
   - sensor.time
   - sensor.haze_pm25_1h_west
@@ -30,97 +35,139 @@ triggers_update:
 styles:
   card:
     - background: "#D9DAD6"
-    - padding: 12px
+    - padding: 0
     - border-radius: 0
     - font-family: '"Roboto Condensed", "DIN Condensed", "IBM Plex Sans Condensed", sans-serif'
     - text-transform: uppercase
     - color: "#25282A"
   grid:
-    - grid-template-areas: '"head head" "wx pm" "wx psi"'
-    - grid-template-columns: 1fr 1fr
-    - grid-template-rows: auto 1fr 1fr
-    - gap: 6px
+    - grid-template-areas: '"main"'
+    - grid-template-columns: 1fr
+    - grid-template-rows: 1fr
+    - height: 100%
   custom_fields:
-    head: [justify-self: stretch]
-    wx: [justify-self: stretch, align-self: stretch]
-    pm: [justify-self: stretch, align-self: stretch]
-    psi: [justify-self: stretch, align-self: stretch]
+    main: [justify-self: stretch, align-self: stretch, height: 100%]
 custom_fields:
-  head: |
+  main: |
     [[[
-      const t = new Date().toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
-      return `<div style="display:flex;align-items:baseline;gap:10px;letter-spacing:.08em">
-        <span style="font-size:22px;font-weight:700">${t}</span>
-        <span style="font-size:18px;color:#626766">JURONG WEST</span></div>`;
-    ]]]
-  wx: |
-    [[[
-      const s = (e) => (states[e] ? states[e].state : '--');
-      const f = s('sensor.nea_forecast_jurong_west');
-      const icons = [['Thundery','mdi:weather-lightning-rainy'],['Heavy','mdi:weather-pouring'],
+      // ---- sizes (vw = % of screen width) ----
+      var sz = { pad: 1.2, gap: 0.8, label: 1.5, small: 1.4, mid: 2.3, big: 6.6, time: 7.6, icon: 6.6, cut: 1.6, seg: 1.0 };
+      var v = function (n) { return n + 'vw'; };
+
+      var s = function (e) { return states[e] ? states[e].state : '--'; };
+      var attr = function (e, a, d) { return (states[e] && states[e].attributes[a]) ? states[e].attributes[a] : d; };
+      var num = function (e, d) { var x = parseFloat(s(e)); return isNaN(x) ? '--' : x.toFixed(d); };
+      var cut = function (c) { return 'clip-path:polygon(0 0,calc(100% - ' + c + ') 0,100% ' + c + ',100% 100%,' + c + ' 100%,0 calc(100% - ' + c + '));'; };
+      var panel = 'background:#E8E8E4;box-sizing:border-box;height:100%;padding:' + v(sz.pad) + ';' + cut(v(sz.cut)) +
+                  'display:flex;flex-direction:column;justify-content:space-between;text-align:left;overflow:hidden;';
+      var label = 'font-size:' + v(sz.label) + ';color:#626766;letter-spacing:.1em;line-height:1.2;';
+      var small = 'font-size:' + v(sz.small) + ';color:#626766;letter-spacing:.08em;line-height:1.3;';
+      var row = 'display:flex;justify-content:space-between;align-items:baseline;';
+
+      // ---- clock ----
+      // Time comes from the HA server, not the tablet: the HTTP "Date" header of
+      // a request to HA gives the server's clock; the difference to the tablet's
+      // clock is kept as an offset (re-synced every 10 min) and the display ticks
+      // every second from tablet time + offset. Shown in SGT (UTC+8) regardless
+      // of the tablet's own time zone setting.
+      var card = this;
+      var two = function (n) { return (n < 10 ? '0' : '') + n; };
+      var days = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+      var mons = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+      var sgt = function () { return new Date(Date.now() + (card._cydOffset || 0) + 8 * 3600000); };
+      var hmText = function (t) { return two(t.getUTCHours()) + ':' + two(t.getUTCMinutes()); };
+      var dateText = function (t) { return two(t.getUTCDate()) + ' ' + mons[t.getUTCMonth()]; };
+      var srcText = function () { return card._cydSynced ? 'HA TIME' : 'TABLET TIME'; };
+      var now = sgt();
+      var clock = '<div style="' + panel + '">' +
+        '<div style="' + row + label + '"><span>SYSTEM CLOCK</span><span>SGT · <span id="cyd-src">' + srcText() + '</span></span></div>' +
+        '<div style="display:flex;align-items:center;">' +
+          '<div style="background:#292D2F;color:#F2F2EE;line-height:1.1;padding:0 ' + v(0.8) + ';white-space:nowrap;margin-right:' + v(1.2) + ';">' +
+            '<span id="cyd-hm" style="font-size:' + v(sz.time) + ';font-weight:700;">' + hmText(now) + '</span>' +
+            '<span id="cyd-ss" style="font-size:' + v(sz.mid) + ';color:#C99A3D;margin-left:' + v(0.4) + ';">' + two(now.getUTCSeconds()) + '</span></div>' +
+          '<div>' +
+            '<div id="cyd-day" style="font-size:' + v(sz.mid) + ';font-weight:700;letter-spacing:.06em;line-height:1.3;">' + days[now.getUTCDay()] + '</div>' +
+            '<div id="cyd-date" style="font-size:' + v(sz.mid) + ';letter-spacing:.06em;line-height:1.3;">' + dateText(now) + '</div>' +
+            '<div id="cyd-year" style="font-size:' + v(sz.mid) + ';letter-spacing:.06em;line-height:1.3;">' + now.getUTCFullYear() + '</div></div></div>' +
+        '<div style="' + small + '">JURONG WEST</div></div>';
+
+      if (!card._cydTimer) {
+        var sync = function () {
+          var t0 = Date.now();
+          fetch('/manifest.json?t=' + t0, { cache: 'no-store', credentials: 'same-origin' }).then(function (r) {
+            var t1 = Date.now();
+            var d = r.headers.get('Date');
+            if (!d) return;
+            // Date header has 1 s resolution: +500 ms; split the round trip.
+            card._cydOffset = Date.parse(d) + 500 - (t0 + t1) / 2;
+            card._cydSynced = true;
+          }).catch(function () {});
+        };
+        sync();
+        card._cydSync = setInterval(sync, 10 * 60 * 1000);
+        card._cydTimer = setInterval(function () {
+          var root = card.shadowRoot;
+          if (!root) return;
+          var q = function (id) { return root.querySelector(id); };
+          var hm = q('#cyd-hm'), ss = q('#cyd-ss');
+          if (!hm || !ss) return;
+          var t = sgt();
+          hm.textContent = hmText(t);
+          ss.textContent = two(t.getUTCSeconds());
+          var dy = q('#cyd-day'), dt = q('#cyd-date'), yr = q('#cyd-year'), src = q('#cyd-src');
+          if (dy) dy.textContent = days[t.getUTCDay()];
+          if (dt) dt.textContent = dateText(t);
+          if (yr) yr.textContent = t.getUTCFullYear();
+          if (src) src.textContent = srcText();
+        }, 1000);
+      }
+
+      // ---- weather ----
+      var f = s('sensor.nea_forecast_jurong_west');
+      var icons = [['Thundery','mdi:weather-lightning-rainy'],['Heavy','mdi:weather-pouring'],
         ['Showers','mdi:weather-rainy'],['Rain','mdi:weather-rainy'],['Hazy','mdi:weather-hazy'],
         ['Mist','mdi:weather-fog'],['Fog','mdi:weather-fog'],['Windy','mdi:weather-windy'],
         ['Partly Cloudy (Night)','mdi:weather-night-partly-cloudy'],['Partly Cloudy','mdi:weather-partly-cloudy'],
         ['Cloudy','mdi:weather-cloudy'],['Night','mdi:weather-night'],['Fair','mdi:weather-sunny']];
-      const icon = (icons.find(([k]) => f.includes(k)) || [0,'mdi:weather-cloudy'])[1];
-      const cond = f.replace(' (Day)','').replace(' (Night)','').replace(' with Gusty Winds',' + Wind');
-      const num = (e, d) => { const v = parseFloat(s(e)); return isNaN(v) ? '--' : v.toFixed(d); };
-      const muted = 'font-size:13px;color:#626766;letter-spacing:.1em';
-      return `<div style="height:100%;box-sizing:border-box;padding:10px 12px;background:#E8E8E4;
-          clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
-          display:flex;flex-direction:column;gap:4px;text-align:left">
-        <div style="${muted}">WEATHER · 2H</div>
-        <ha-icon icon="${icon}" style="--mdc-icon-size:44px;color:#25282A"></ha-icon>
-        <div style="font-size:18px;letter-spacing:.06em;line-height:1.15;white-space:normal">${cond}</div>
-        <div style="font-size:40px;font-weight:700;line-height:1.1">${num('sensor.home_temperature',1)}°</div>
-        <div style="${muted}">FEELS ${num('sensor.home_apparent_temperature',1)}°</div>
-        <div style="${muted}">HUM ${num('sensor.home_humidity',0)}%</div>
-        <div style="${muted};margin-top:auto">UPD ${s('sensor.nea_forecast_jurong_west_updated')}
-          · TILL ${s('sensor.nea_forecast_jurong_west_until')}</div></div>`;
-    ]]]
-  pm: |
-    [[[
-      const s = (e) => (states[e] ? states[e].state : '--');
-      const band = states['sensor.haze_pm25_1h_west_band'];
-      const v = parseFloat(s('sensor.haze_pm25_1h_west'));
-      const scale = 250;
-      let segs = '';
-      for (let i = 0; i < 12; i++)
-        segs += `<span style="flex:1;height:8px;background:${v > i * scale / 12 ? '#292D2F' : '#C7C9C6'}"></span>`;
-      return `<div style="height:100%;box-sizing:border-box;padding:8px 10px;background:#E8E8E4;
-          clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
-          display:flex;flex-direction:column;gap:5px;text-align:left">
-        <div style="display:flex;justify-content:space-between;font-size:13px;color:#626766;letter-spacing:.1em">
-          <span>PM2.5 1H</span><span style="text-transform:none">µg/m³</span></div>
-        <div style="background:#292D2F;color:#F2F2EE;display:flex;justify-content:space-between;align-items:flex-end;padding:2px 8px">
-          <span style="font-size:36px;font-weight:700;line-height:1.1">${isNaN(v) ? '--' : v}</span>
-          <span style="font-size:12px;color:#B7B9B7;padding-bottom:4px">${s('sensor.haze_pm25_updated')}</span></div>
-        <div style="background:${band?.attributes.chip || '#B7B9B7'};color:${band?.attributes.chip_text || '#151719'};
-          text-align:center;font-size:13px;font-weight:700;letter-spacing:.1em;padding:3px 0;
-          clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px))">
-          ${band ? band.state.toUpperCase() : '--'}</div>
-        <div style="display:flex;gap:2px">${segs}</div></div>`;
-    ]]]
-  psi: |
-    [[[
-      const s = (e) => (states[e] ? states[e].state : '--');
-      const band = states['sensor.haze_psi_24h_west_band'];
-      const v = parseFloat(s('sensor.haze_psi_24h_west'));
-      const scale = 300;
-      let segs = '';
-      for (let i = 0; i < 12; i++)
-        segs += `<span style="flex:1;height:8px;background:${v > i * scale / 12 ? '#292D2F' : '#C7C9C6'}"></span>`;
-      return `<div style="height:100%;box-sizing:border-box;padding:8px 10px;background:#E8E8E4;
-          clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
-          display:flex;flex-direction:column;gap:5px;text-align:left">
-        <div style="display:flex;justify-content:space-between;font-size:13px;color:#626766;letter-spacing:.1em">
-          <span>PSI 24H</span><span>INDEX</span></div>
-        <div style="background:#292D2F;color:#F2F2EE;display:flex;justify-content:space-between;align-items:flex-end;padding:2px 8px">
-          <span style="font-size:36px;font-weight:700;line-height:1.1">${isNaN(v) ? '--' : v}</span>
-          <span style="font-size:12px;color:#B7B9B7;padding-bottom:4px">${s('sensor.haze_updated')}</span></div>
-        <div style="background:${band?.attributes.chip || '#B7B9B7'};color:${band?.attributes.chip_text || '#151719'};
-          text-align:center;font-size:13px;font-weight:700;letter-spacing:.1em;padding:3px 0;
-          clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px))">
-          ${band ? band.state.toUpperCase() : '--'}</div>
-        <div style="display:flex;gap:2px">${segs}</div></div>`;
+      var icon = 'mdi:weather-cloudy';
+      for (var i = 0; i < icons.length; i++) { if (f.indexOf(icons[i][0]) >= 0) { icon = icons[i][1]; break; } }
+      var cond = f.replace(' (Day)', '').replace(' (Night)', '').replace(' with Gusty Winds', ' + Wind');
+      var weather = '<div style="' + panel + '">' +
+        '<div style="' + row + label + '"><span>WEATHER · 2H</span><span>UPD ' + s('sensor.nea_forecast_jurong_west_updated') +
+          ' · TILL ' + s('sensor.nea_forecast_jurong_west_until') + '</span></div>' +
+        '<div style="display:flex;align-items:center;min-width:0;">' +
+          '<ha-icon icon="' + icon + '" style="--mdc-icon-size:' + v(sz.icon) + ';width:' + v(sz.icon) + ';height:' + v(sz.icon) + ';color:#25282A;margin-right:' + v(1) + ';flex:0 0 auto;"></ha-icon>' +
+          '<span style="font-size:' + v(sz.big) + ';font-weight:700;line-height:1;margin-right:' + v(1.2) + ';white-space:nowrap;flex:0 0 auto;">' + num('sensor.home_temperature', 1) + '°</span>' +
+          '<div style="flex:1 1 0%;min-width:0;width:0;font-size:' + v(sz.mid) + ';letter-spacing:.05em;line-height:1.15;white-space:normal;word-wrap:break-word;">' + cond + '</div></div>' +
+        '<div style="' + row + small + '"><span>FEELS ' + num('sensor.home_apparent_temperature', 1) + '°</span>' +
+          '<span>HUM ' + num('sensor.home_humidity', 0) + '%</span></div></div>';
+
+      // ---- haze readout ----
+      var readout = function (caption, unit, sensor, band, scale, updated) {
+        var x = parseFloat(s(sensor));
+        var segs = '';
+        for (var i = 0; i < 12; i++) {
+          segs += '<span style="display:inline-block;width:7.6%;margin-right:0.73%;height:' + v(sz.seg) + ';background:' +
+                  (x > i * scale / 12 ? '#292D2F' : '#C7C9C6') + ';"></span>';
+        }
+        return '<div style="' + panel + '">' +
+          '<div style="' + row + label + '"><span>' + caption + '</span><span style="text-transform:none;">' + unit + '</span></div>' +
+          '<div style="display:flex;align-items:stretch;">' +
+            '<div style="' + row + 'background:#292D2F;color:#F2F2EE;padding:0 ' + v(0.8) + ';align-items:flex-end;width:45%;box-sizing:border-box;margin-right:' + v(1.2) + ';">' +
+              '<span style="font-size:' + v(sz.big) + ';font-weight:700;line-height:1.15;">' + (isNaN(x) ? '--' : x) + '</span>' +
+              '<span style="font-size:' + v(sz.small) + ';color:#B7B9B7;padding-bottom:' + v(0.6) + ';">' + s(updated) + '</span></div>' +
+            '<div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;">' +
+              '<div style="background:' + attr(band, 'chip', '#B7B9B7') + ';color:' + attr(band, 'chip_text', '#151719') +
+                ';text-align:center;font-size:' + v(sz.mid) + ';font-weight:700;letter-spacing:.08em;line-height:1.6;' + cut(v(0.8)) + '">' +
+                (states[band] ? states[band].state.toUpperCase() : '--') + '</div>' +
+              '<div style="font-size:0;line-height:0;">' + segs + '</div></div></div>' +
+          '<div style="' + small + '">NEA · WEST</div></div>';
+      };
+
+      return '<div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;grid-gap:' + v(sz.gap) +
+        ';height:100%;box-sizing:border-box;padding:' + v(sz.gap) + ';">' +
+        clock + weather +
+        readout('PM2.5 1H', 'µg/m³', 'sensor.haze_pm25_1h_west', 'sensor.haze_pm25_1h_west_band', 250, 'sensor.haze_pm25_updated') +
+        readout('PSI 24H', 'INDEX', 'sensor.haze_psi_24h_west', 'sensor.haze_psi_24h_west_band', 300, 'sensor.haze_updated') +
+        '</div>';
     ]]]
