@@ -27,9 +27,26 @@ rest:
         # "2026-10-13T10:00:00+08:00" -> "10:00"
         value_template: "{{ value_json.data['items'][0].timestamp[11:16] }}"
 
+  # NEA 2-hour forecast for the Jurong West area.
+  - resource: https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast
+    scan_interval: 900
+    sensor:
+      - name: NEA Forecast Jurong West
+        unique_id: nea_forecast_jurong_west
+        availability: "{{ value_json is defined and value_json.code == 0 }}"
+        value_template: >
+          {{ (value_json.data['items'][0].forecasts
+              | selectattr('area', 'eq', 'Jurong West') | first).forecast }}
+      - name: NEA Forecast Jurong West Until
+        unique_id: nea_forecast_jurong_west_until
+        availability: "{{ value_json is defined and value_json.code == 0 }}"
+        # valid_period.end "2026-10-13T13:00:00+08:00" -> "13:00"
+        value_template: "{{ value_json.data['items'][0].valid_period.end[11:16] }}"
+
 template:
   - sensor:
       # NEA 1-hr PM2.5 bands: I Normal 0-55, II Elevated 56-150, III High 151-250, IV Very High >250
+      # chip / chip_text: Mecha Armor UI colours for the band tag on the panel.
       - name: Haze PM25 1h West Band
         unique_id: haze_pm25_1h_west_band
         state: >
@@ -40,13 +57,15 @@ template:
           {% elif v <= 250 %}High
           {% else %}Very High{% endif %}
         attributes:
-          color: >
+          chip: >
             {% set v = states('sensor.haze_pm25_1h_west') | int(-1) %}
-            {% if v < 0 %}#909090
-            {% elif v <= 55 %}#2ECC40
-            {% elif v <= 150 %}#FFDC00
-            {% elif v <= 250 %}#FF851B
-            {% else %}#FF4136{% endif %}
+            {% if v <= 55 %}#B7B9B7
+            {% elif v <= 150 %}#D4A62A
+            {% elif v <= 250 %}#D82F25
+            {% else %}#B8201B{% endif %}
+          chip_text: >
+            {% set v = states('sensor.haze_pm25_1h_west') | int(-1) %}
+            {% if v <= 150 %}#151719{% else %}#F2F2EE{% endif %}
 
       # NEA PSI bands: Good 0-50, Moderate 51-100, Unhealthy 101-200, Very Unhealthy 201-300, Hazardous >300
       - name: Haze PSI 24h West Band
@@ -60,11 +79,15 @@ template:
           {% elif v <= 300 %}Very Unhealthy
           {% else %}Hazardous{% endif %}
         attributes:
-          color: >
+          chip: >
             {% set v = states('sensor.haze_psi_24h_west') | int(-1) %}
-            {% if v < 0 %}#909090
-            {% elif v <= 50 %}#2ECC40
-            {% elif v <= 100 %}#FFDC00
-            {% elif v <= 200 %}#FF851B
-            {% elif v <= 300 %}#FF4136
-            {% else %}#B10DC9{% endif %}
+            {% if v <= 50 %}#B7B9B7
+            {% elif v <= 100 %}#D4A62A
+            {% elif v <= 200 %}#D82F25
+            {% elif v <= 300 %}#B8201B
+            {% else %}#151719{% endif %}
+          chip_text: >
+            {% set v = states('sensor.haze_psi_24h_west') | int(-1) %}
+            {% if v <= 100 %}#151719
+            {% elif v <= 300 %}#F2F2EE
+            {% else %}#D4A62A{% endif %}

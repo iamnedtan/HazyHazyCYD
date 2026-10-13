@@ -3,21 +3,37 @@
 Home Assistant wall panel on a Cheap Yellow Display (ESP32-2432S028R, dual-USB version), running [openHASP](https://www.openhasp.com).
 
 The device only draws pages and reports touches over MQTT. All data and logic live in Home Assistant.
+Look: [Mecha Armor UI](https://claude.ai/artifact/X4594PmkBQB1hCrwdjFbVm), "Armor Plate" (light) draft.
 
 | Page | Content |
 |------|---------|
-| 0 | Overlay on every page: left/right edge strips switch pages |
-| 1 | Haze, West region: PM2.5 (1h) on top, PSI (24h) below, coloured by NEA band |
-| 2 | 6 buttons. Labels and actions configured in HA, no reflash |
-| 3 | House status, 6 rows (placeholder entities for now) |
+| 0 | Overlay on every page: left/right edge rails switch pages (wraps around) |
+| 1 | Jurong West: NEA 2-hour forecast + home weather (left), PM2.5 1h and PSI 24h with NEA bands (right) |
+| 2 | Living room: 7 buttons (4 AC scripts, Lights + Fan, Night Off, Main Light) |
+| 3 | Ceiling fans: dining table and prism fan IR controls |
 
 ## Repo layout
 
 ```
-pages/pages.jsonl          Screen layout, uploaded to the device
-ha/packages/hazy_psi.yaml  PM2.5 + PSI sensors from data.gov.sg, band/colour templates
-ha/packages/hazy_cyd.yaml  Button helpers + openHASP object bindings
+tools/gen_panel.py             Generator: edit this, then run it
+pages/pages.jsonl              GENERATED screen layout, uploaded to the device
+ha/packages/hazy_cyd.yaml      GENERATED button helpers + openHASP object bindings
+ha/packages/hazy_psi.yaml      PM2.5, PSI, NEA forecast sensors and band colours
+ha/packages/hazy_routines.yaml Night Off script, night screen schedule
 ```
+
+## Changing the layout
+
+1. Edit the CONFIG section of `tools/gen_panel.py` (buttons, fan controls, entities).
+2. Run `python3 tools/gen_panel.py`.
+3. Upload `pages/pages.jsonl` to the plate and reboot:
+   ```bash
+   curl -F "data=@pages/pages.jsonl;filename=/pages.jsonl" http://192.168.100.167/edit
+   curl http://192.168.100.167/reboot
+   ```
+4. Copy `ha/packages/hazy_cyd.yaml` to HA and reload the openHASP integration (restart HA if helpers changed).
+
+Object ids are allocated in fixed blocks per section, so a change inside one section does not shift the bindings of others.
 
 ## Setup
 
@@ -64,54 +80,28 @@ If flashing fails with `Failed to connect`, hold BOOT, tap RST, release BOOT and
    homeassistant:
      packages: !include_dir_named packages
    ```
-3. Copy both files from `ha/packages/` into `/config/packages/`.
+3. Copy all files from `ha/packages/` into `/config/packages/`.
 4. Restart HA.
-5. Set the button labels: *Settings > Devices & Services > Helpers*, edit `CYD Button N Label`.
-
-### 4. Make the buttons do something
-
-Each screen button presses `input_button.cyd_btn_N`. Hook an automation to it:
-
-```yaml
-automation:
-  - alias: CYD button 1 - toggle air purifier
-    triggers:
-      - trigger: state
-        entity_id: input_button.cyd_btn_1
-    actions:
-      - action: fan.toggle
-        target: { entity_id: fan.air_purifier }
-```
-
-Renaming the label and changing the automation both happen in HA. The device never needs a reflash.
-
-## Status page placeholders
-
-`ha/packages/hazy_cyd.yaml` page 3 uses these placeholder IDs. Replace them with your own:
-
-- `sensor.living_room_temperature`
-- `sensor.living_room_humidity`
-- `binary_sensor.front_door`
-- `binary_sensor.windows` (for example a group of window sensors)
-- `sensor.house_power`
-
-"Lights on" counts every `light.*` entity that is on and needs no changes.
+5. Optional: override a page 2 button live with the helpers `CYD Button N Label` / `CYD Button N Entity`.
 
 ## Haze bands
 
 | PM2.5 1h (µg/m³) | Band | | PSI 24h | Band |
 |---|---|---|---|---|
-| 0-55 | Normal (green) | | 0-50 | Good (green) |
-| 56-150 | Elevated (yellow) | | 51-100 | Moderate (yellow) |
-| 151-250 | High (orange) | | 101-200 | Unhealthy (orange) |
-| >250 | Very High (red) | | 201-300 | Very Unhealthy (red) |
-| | | | >300 | Hazardous (purple) |
+| 0-55 | Normal (grey tag) | | 0-50 | Good (grey tag) |
+| 56-150 | Elevated (caution-yellow) | | 51-100 | Moderate (caution-yellow) |
+| 151-250 | High (warning-red) | | 101-200 | Unhealthy (warning-red) |
+| >250 | Very High (system-red) | | 201-300 | Very Unhealthy (system-red) |
+| | | | >300 | Hazardous (black, yellow text) |
 
 To change region, replace `west` in `ha/packages/hazy_psi.yaml` with `north`, `south`, `east` or `central`.
 
 ## Notes and limits
 
-- Screen is 320x240. The edge strips are 40px each, so page content is 240x240.
+- Screen is 320x240. The edge rails are 40px each; page content is x 44-276.
 - Built-in fonts are 12, 16, 24 and 32 only. The CYD has no PSRAM, so openHASP's TrueType fonts (any size) are not usable. The haze numbers use 32.
-- Touch is resistive (XPT2046). Keep buttons at least about 60x60px.
-- To change the layout, edit `pages.jsonl` in the device's web file editor. Object IDs (`pXbY`) must match the bindings in `hazy_cyd.yaml`.
+- Touch is resistive (XPT2046). Keep buttons large; the fan page's 74x42 buttons are the practical minimum.
+- No PSRAM: about 17 KB of LVGL memory is left with the current pages. Check `http://<device-ip>/api/info/` after changes.
+- openHASP cannot clip shapes. Cut corners are thick lines in the background colour laid over each corner.
+- The default theme adds a gradient to fills; the generator sets `bg_grad_dir: 0` on everything.
+- Screen dims after 60 s idle and never turns off, except 00:00-06:00 (`hazy_routines.yaml`).
