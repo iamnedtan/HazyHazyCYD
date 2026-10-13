@@ -21,7 +21,7 @@ tools/gen_panel.py             Generator: edit this, then run it
 pages/pages.jsonl              GENERATED screen layout, uploaded to the device
 ha/packages/hazy_cyd.yaml      GENERATED button helpers + openHASP object bindings
 ha/packages/hazy_psi.yaml      PM2.5, PSI, NEA forecast sensors and band colours
-ha/packages/hazy_routines.yaml Night Off script, night screen schedule
+ha/packages/hazy_routines.yaml Night screen schedule (off 00:00-06:00, dim-only by day)
 ha/packages/hazy_cameras.yaml  Fresh-frame RTSP snapshot cameras + thumbnail refresh
 ```
 

@@ -1,28 +1,4 @@
-# Routines used by the CYD panel, and the panel's night screen schedule.
-
-script:
-  # Page 2, B-06 "Night Off": all aircons off, living room ceiling fans off.
-  cyd_night_off:
-    alias: CYD Night Off
-    icon: mdi:weather-night
-    mode: single
-    sequence:
-      - action: climate.turn_off
-        target:
-          entity_id:
-            - climate.esp_8285_livingrm_livingrm_ac
-            - climate.study_ac
-            - climate.esp_8285_mbr_mbr_ac
-            - climate.esp_8285_kx_kx_ac
-            - climate.esp_8285_mk_mk_ac
-            - climate.esp_8285_lab_lab_ac
-      # Ceiling fans are IR-controlled; their real state is unknown, so the
-      # commands are always sent. Dining only has a toggle (may switch an
-      # already-off fan on); prism has a true "Fan Off".
-      - action: script.turn_on
-        target: { entity_id: script.rm4_lr_dining_fan_toggle }
-      - action: script.turn_on
-        target: { entity_id: script.rm4_lr_prism_toggle_remote }   # "Fan Off"
+# The CYD panel's night screen schedule.
 
 automation:
   # Screen fully off after idle between 00:00 and 06:00; otherwise it only dims.
