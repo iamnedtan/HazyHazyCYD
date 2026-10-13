@@ -24,6 +24,7 @@ ha/packages/hazy_cyd.yaml      GENERATED button helpers + openHASP object bindin
 ha/packages/hazy_psi.yaml      PM2.5, PSI, NEA forecast sensors and band colours
 ha/packages/hazy_routines.yaml Night screen schedule (off 00:00-06:00, dim-only by day)
 ha/packages/hazy_cameras.yaml  Fresh-frame RTSP snapshot cameras + thumbnail refresh
+ha/dashboard/p01_card.yaml     HA dashboard card mirroring page 1 (needs custom:button-card)
 ```
 
 ## Changing the layout
