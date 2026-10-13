@@ -40,20 +40,22 @@ PSI_SCALE = 300  # PSI value that fills all 12 segments
 #   icon_color: icon colour token
 #   state:  optional entity; when "on" the button is drawn active (dark)
 BUTTONS = [
+    {"name": "AC 25", "entity": "script.living_study_ac_25",
+     "icon": "\uE01B", "icon_color": "#626766", "state": None},   # air-conditioner
+    {"name": "AC 26", "entity": "script.living_study_ac_26",
+     "icon": "\uE01B", "icon_color": "#626766", "state": None},   # air-conditioner
     {"name": "Low AC Low Fan", "entity": "script.livrm_ac_26_ac_low_fan_low",
      "icon": "\uE717", "icon_color": "#626766", "state": None},   # snowflake
     {"name": "Low AC High Fan", "entity": "script.living_study_ac_26_fan_high",
      "icon": "\uE210", "icon_color": "#626766", "state": None},   # fan
-    {"name": "Off Aircon", "entity": "script.living_study_off",
-     "icon": "\uE425", "icon_color": "#D82F25", "state": None},   # power, warning-red
-    {"name": "AC 25", "entity": "script.living_study_ac_25",
-     "icon": "\uE01B", "icon_color": "#626766", "state": None},   # air-conditioner
-    {"name": "Lights + Fan", "entity": "script.enter_door_all_on",
-     "icon": "\uE6E8", "icon_color": "#626766", "state": None},   # lightbulb-on
-    {"name": "Night Off", "entity": "script.cyd_night_off",
-     "icon": "\uE594", "icon_color": "#626766", "state": None},   # weather-night
     {"name": "Main Light", "entity": "script.rm4_lr_mainlight_toggle",
      "icon": "\uE769", "icon_color": "#626766", "state": None},   # ceiling-light
+    {"name": "Dining Fan", "entity": "script.rm4_lr_dining_toggle",
+     "icon": "\uE210", "icon_color": "#626766", "state": None},   # fan
+    {"name": "Prism Fan", "entity": "script.rm4_lr_prism_main_toggle",
+     "icon": "\uE210", "icon_color": "#626766", "state": None},   # fan
+    {"name": "Off AC", "entity": "script.living_study_off",
+     "icon": "\uE425", "icon_color": "#D82F25", "state": None},   # power, warning-red
 ]
 
 # Page 3: ceiling fans. Each section: (title, buttons).
@@ -77,6 +79,16 @@ FAN_SECTIONS = [
         {"name": "Light Off", "entity": "script.rm4_lr_prism_off_light", "icon": "\uE335"},
     ]),
 ]
+
+# Camera pages: one page each. The image is pushed by HA (ha/packages/hazy_cameras.yaml)
+# at CAM_W x CAM_H and drawn at CAM_ZOOM/256 scale (no PSRAM: keep it small).
+CAMERAS = [
+    {"title": "KX CAMERA", "caption": "KX · TAPO C211", "entity": "camera.cyd_kx_snapshot"},
+    {"title": "MK CAMERA", "caption": "MK · TAPO C211", "entity": "camera.cyd_mk_snapshot"},
+]
+CAM_W, CAM_H, CAM_ZOOM = 112, 63, 512
+CAM_IMG_ID = 20
+HA_URL = "http://192.168.100.193:8123"
 
 # ---------------------------------------------------------------- TOKENS ----
 # Mecha Armor UI tokens (exact values).
@@ -347,6 +359,29 @@ for sec, (title, buttons) in enumerate(FAN_SECTIONS):
     sec_y += 15 + 2 * bh3 + 3 + 2
 
 
+# Camera pages ---------------------------------------------------------------
+for k, cam in enumerate(CAMERAS):
+    pg = 4 + k
+    page_base(pg, cam["title"], f"P{pg:02d}")
+    id_block(pg, 10)
+    win_y, win_h = 30, 208
+    panel(pg, CX, win_y, CW, win_h, fill=BLACK_METAL)
+    label(pg, CX + 10, win_y + 6, CW - 20, 16, cam["caption"], color=ARMOR_GRAY,
+          text_letter_space=1)
+    label(pg, CX + 10, win_y + win_h - 22, CW - 20, 16, "TAP IMAGE TO REFRESH",
+          color=ARMOR_GRAY, align="right", text_letter_space=1)
+    id_block(pg, CAM_IMG_ID)
+    # Object is the source size, centred; zoom scales it around its centre.
+    # auto_size must come before src: an empty src with auto_size on shrinks
+    # the object to 0x0, and later images would then be invisible.
+    img = add(pg, "img", auto_size=0, src="", x=CX + (CW - CAM_W) // 2,
+              y=win_y + (win_h - CAM_H) // 2, w=CAM_W, h=CAM_H, zoom=CAM_ZOOM, click=1)
+    pic = f'state_attr("{cam["entity"]}", "entity_picture")'
+    bind(img, None, {"up": [{"service": "openhasp.push_image", "push": {
+        "obj": img, "width": CAM_W, "height": CAM_H, "fitscreen": True,
+        "image": f'{HA_URL}{{{{ {pic} }}}}'}}]})
+
+
 # Wrap-around: NEXT on the last page goes to page 1, PREV on page 1 to the last.
 LAST_PAGE = max(o["page"] for o in lines)
 lines.append({"page": 1, "id": 0, "prev": LAST_PAGE})
@@ -402,7 +437,17 @@ def write_yaml():
             for ev, actions in event.items():
                 y.append(f"          \"{ev}\":")
                 for act in actions:
-                    if "condition" in act:
+                    if "push" in act:
+                        d = act["push"]
+                        y.append("            - service: openhasp.push_image")
+                        y.append(f"              target: {{ entity_id: openhasp.{PLATE} }}")
+                        y.append("              data:")
+                        y.append(f"                obj: {d['obj']}")
+                        y.append(f"                image: {q(d['image'])}")
+                        y.append(f"                width: {d['width']}")
+                        y.append(f"                height: {d['height']}")
+                        y.append(f"                fitscreen: {str(d['fitscreen']).lower()}")
+                    elif "condition" in act:
                         y.append("            - condition: template")
                         y.append(f"              value_template: {q(act['condition'])}")
                     else:

@@ -1,0 +1,86 @@
+# Camera thumbnails on the CYD (pages 4 and 5).
+#
+# The CYD has no PSRAM, so the image is small (112x63, drawn at 2x) and only
+# the camera on the page being shown is refreshed. Leaving a camera page clears
+# its image to give the memory back.
+#
+# Must match tools/gen_panel.py: CAMERAS, CAM_W/CAM_H, CAM_IMG_ID (object b20).
+#
+# Snapshot source: the TP-Link "live_view" cameras cache their still image for
+# 5 minutes, so these ffmpeg cameras grab a fresh frame from the low-res RTSP
+# stream (stream2) instead. Put the RTSP URLs in secrets.yaml (never in this repo):
+#   cyd_kx_rtsp: "rtsp://<camera-account-user>:<password>@<kx-camera-ip>:554/stream2"
+#   cyd_mk_rtsp: "rtsp://<camera-account-user>:<password>@<mk-camera-ip>:554/stream2"
+# The user/password is the "Camera Account" set in the Tapo app
+# (Camera settings > Advanced > Camera Account), not your TP-Link login.
+
+ffmpeg:
+
+camera:
+  - platform: ffmpeg
+    name: CYD KX Snapshot
+    input: !secret cyd_kx_rtsp
+  - platform: ffmpeg
+    name: CYD MK Snapshot
+    input: !secret cyd_mk_rtsp
+
+automation:
+  - id: hazycyd_camera_refresh
+    alias: CYD camera - refresh thumbnail
+    mode: single            # skip a tick if the previous push is still running
+    triggers:
+      - trigger: time_pattern
+        seconds: "/10"
+      - trigger: state
+        entity_id: number.hazycyd_page_number
+    conditions:
+      - condition: state
+        entity_id: light.hazycyd_backlight
+        state: "on"
+    actions:
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ states('number.hazycyd_page_number') | int(0) == 4 }}"
+            sequence:
+              - action: openhasp.push_image
+                target: { entity_id: openhasp.hazycyd }
+                data:
+                  obj: p4b20
+                  image: 'http://192.168.100.193:8123{{ state_attr("camera.cyd_kx_snapshot", "entity_picture") }}'
+                  width: 112
+                  height: 63
+                  fitscreen: true
+          - conditions:
+              - condition: template
+                value_template: "{{ states('number.hazycyd_page_number') | int(0) == 5 }}"
+            sequence:
+              - action: openhasp.push_image
+                target: { entity_id: openhasp.hazycyd }
+                data:
+                  obj: p5b20
+                  image: 'http://192.168.100.193:8123{{ state_attr("camera.cyd_mk_snapshot", "entity_picture") }}'
+                  width: 112
+                  height: 63
+                  fitscreen: true
+
+  - id: hazycyd_camera_release
+    alias: CYD camera - free image memory when leaving
+    triggers:
+      - trigger: state
+        entity_id: number.hazycyd_page_number
+    actions:
+      - if:
+          - condition: template
+            value_template: "{{ trigger.to_state.state | int(0) != 4 }}"
+        then:
+          - action: openhasp.command
+            target: { entity_id: openhasp.hazycyd }
+            data: { keyword: p4b20.src, parameters: "" }
+      - if:
+          - condition: template
+            value_template: "{{ trigger.to_state.state | int(0) != 5 }}"
+        then:
+          - action: openhasp.command
+            target: { entity_id: openhasp.hazycyd }
+            data: { keyword: p5b20.src, parameters: "" }

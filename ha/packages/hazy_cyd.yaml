@@ -24,6 +24,8 @@ input_text:
   cyd_btn_6_entity: { name: CYD Button 6 Entity, max: 100 }
   cyd_btn_7_label: { name: CYD Button 7 Label, max: 20 }
   cyd_btn_7_entity: { name: CYD Button 7 Entity, max: 100 }
+  cyd_btn_8_label: { name: CYD Button 8 Label, max: 20 }
+  cyd_btn_8_entity: { name: CYD Button 8 Entity, max: 100 }
 
 openhasp:
   hazycyd:
@@ -139,7 +141,7 @@ openhasp:
           "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 275.0 else "#C7C9C6" }}'
       - obj: "p2b12"
         properties:
-          "text": '{{ (states("input_text.cyd_btn_1_label") if states("input_text.cyd_btn_1_label") not in ["", "unknown", "unavailable"] else "Low AC Low Fan") | upper }}'
+          "text": '{{ (states("input_text.cyd_btn_1_label") if states("input_text.cyd_btn_1_label") not in ["", "unknown", "unavailable"] else "AC 25") | upper }}'
       - obj: "p2b10"
         event:
           "up":
@@ -147,10 +149,10 @@ openhasp:
               value_template: '{{ (states("input_text.cyd_btn_1_entity") not in ["", "unknown", "unavailable"]) or True }}'
             - service: homeassistant.turn_on
               target:
-                entity_id: '{{ states("input_text.cyd_btn_1_entity") if states("input_text.cyd_btn_1_entity") not in ["", "unknown", "unavailable"] else "script.livrm_ac_26_ac_low_fan_low" }}'
+                entity_id: '{{ states("input_text.cyd_btn_1_entity") if states("input_text.cyd_btn_1_entity") not in ["", "unknown", "unavailable"] else "script.living_study_ac_25" }}'
       - obj: "p2b22"
         properties:
-          "text": '{{ (states("input_text.cyd_btn_2_label") if states("input_text.cyd_btn_2_label") not in ["", "unknown", "unavailable"] else "Low AC High Fan") | upper }}'
+          "text": '{{ (states("input_text.cyd_btn_2_label") if states("input_text.cyd_btn_2_label") not in ["", "unknown", "unavailable"] else "AC 26") | upper }}'
       - obj: "p2b20"
         event:
           "up":
@@ -158,10 +160,10 @@ openhasp:
               value_template: '{{ (states("input_text.cyd_btn_2_entity") not in ["", "unknown", "unavailable"]) or True }}'
             - service: homeassistant.turn_on
               target:
-                entity_id: '{{ states("input_text.cyd_btn_2_entity") if states("input_text.cyd_btn_2_entity") not in ["", "unknown", "unavailable"] else "script.living_study_ac_26_fan_high" }}'
+                entity_id: '{{ states("input_text.cyd_btn_2_entity") if states("input_text.cyd_btn_2_entity") not in ["", "unknown", "unavailable"] else "script.living_study_ac_26" }}'
       - obj: "p2b32"
         properties:
-          "text": '{{ (states("input_text.cyd_btn_3_label") if states("input_text.cyd_btn_3_label") not in ["", "unknown", "unavailable"] else "Off Aircon") | upper }}'
+          "text": '{{ (states("input_text.cyd_btn_3_label") if states("input_text.cyd_btn_3_label") not in ["", "unknown", "unavailable"] else "Low AC Low Fan") | upper }}'
       - obj: "p2b30"
         event:
           "up":
@@ -169,10 +171,10 @@ openhasp:
               value_template: '{{ (states("input_text.cyd_btn_3_entity") not in ["", "unknown", "unavailable"]) or True }}'
             - service: homeassistant.turn_on
               target:
-                entity_id: '{{ states("input_text.cyd_btn_3_entity") if states("input_text.cyd_btn_3_entity") not in ["", "unknown", "unavailable"] else "script.living_study_off" }}'
+                entity_id: '{{ states("input_text.cyd_btn_3_entity") if states("input_text.cyd_btn_3_entity") not in ["", "unknown", "unavailable"] else "script.livrm_ac_26_ac_low_fan_low" }}'
       - obj: "p2b42"
         properties:
-          "text": '{{ (states("input_text.cyd_btn_4_label") if states("input_text.cyd_btn_4_label") not in ["", "unknown", "unavailable"] else "AC 25") | upper }}'
+          "text": '{{ (states("input_text.cyd_btn_4_label") if states("input_text.cyd_btn_4_label") not in ["", "unknown", "unavailable"] else "Low AC High Fan") | upper }}'
       - obj: "p2b40"
         event:
           "up":
@@ -180,10 +182,10 @@ openhasp:
               value_template: '{{ (states("input_text.cyd_btn_4_entity") not in ["", "unknown", "unavailable"]) or True }}'
             - service: homeassistant.turn_on
               target:
-                entity_id: '{{ states("input_text.cyd_btn_4_entity") if states("input_text.cyd_btn_4_entity") not in ["", "unknown", "unavailable"] else "script.living_study_ac_25" }}'
+                entity_id: '{{ states("input_text.cyd_btn_4_entity") if states("input_text.cyd_btn_4_entity") not in ["", "unknown", "unavailable"] else "script.living_study_ac_26_fan_high" }}'
       - obj: "p2b52"
         properties:
-          "text": '{{ (states("input_text.cyd_btn_5_label") if states("input_text.cyd_btn_5_label") not in ["", "unknown", "unavailable"] else "Lights + Fan") | upper }}'
+          "text": '{{ (states("input_text.cyd_btn_5_label") if states("input_text.cyd_btn_5_label") not in ["", "unknown", "unavailable"] else "Main Light") | upper }}'
       - obj: "p2b50"
         event:
           "up":
@@ -191,10 +193,10 @@ openhasp:
               value_template: '{{ (states("input_text.cyd_btn_5_entity") not in ["", "unknown", "unavailable"]) or True }}'
             - service: homeassistant.turn_on
               target:
-                entity_id: '{{ states("input_text.cyd_btn_5_entity") if states("input_text.cyd_btn_5_entity") not in ["", "unknown", "unavailable"] else "script.enter_door_all_on" }}'
+                entity_id: '{{ states("input_text.cyd_btn_5_entity") if states("input_text.cyd_btn_5_entity") not in ["", "unknown", "unavailable"] else "script.rm4_lr_mainlight_toggle" }}'
       - obj: "p2b62"
         properties:
-          "text": '{{ (states("input_text.cyd_btn_6_label") if states("input_text.cyd_btn_6_label") not in ["", "unknown", "unavailable"] else "Night Off") | upper }}'
+          "text": '{{ (states("input_text.cyd_btn_6_label") if states("input_text.cyd_btn_6_label") not in ["", "unknown", "unavailable"] else "Dining Fan") | upper }}'
       - obj: "p2b60"
         event:
           "up":
@@ -202,10 +204,10 @@ openhasp:
               value_template: '{{ (states("input_text.cyd_btn_6_entity") not in ["", "unknown", "unavailable"]) or True }}'
             - service: homeassistant.turn_on
               target:
-                entity_id: '{{ states("input_text.cyd_btn_6_entity") if states("input_text.cyd_btn_6_entity") not in ["", "unknown", "unavailable"] else "script.cyd_night_off" }}'
+                entity_id: '{{ states("input_text.cyd_btn_6_entity") if states("input_text.cyd_btn_6_entity") not in ["", "unknown", "unavailable"] else "script.rm4_lr_dining_toggle" }}'
       - obj: "p2b72"
         properties:
-          "text": '{{ (states("input_text.cyd_btn_7_label") if states("input_text.cyd_btn_7_label") not in ["", "unknown", "unavailable"] else "Main Light") | upper }}'
+          "text": '{{ (states("input_text.cyd_btn_7_label") if states("input_text.cyd_btn_7_label") not in ["", "unknown", "unavailable"] else "Prism Fan") | upper }}'
       - obj: "p2b70"
         event:
           "up":
@@ -213,7 +215,18 @@ openhasp:
               value_template: '{{ (states("input_text.cyd_btn_7_entity") not in ["", "unknown", "unavailable"]) or True }}'
             - service: homeassistant.turn_on
               target:
-                entity_id: '{{ states("input_text.cyd_btn_7_entity") if states("input_text.cyd_btn_7_entity") not in ["", "unknown", "unavailable"] else "script.rm4_lr_mainlight_toggle" }}'
+                entity_id: '{{ states("input_text.cyd_btn_7_entity") if states("input_text.cyd_btn_7_entity") not in ["", "unknown", "unavailable"] else "script.rm4_lr_prism_main_toggle" }}'
+      - obj: "p2b82"
+        properties:
+          "text": '{{ (states("input_text.cyd_btn_8_label") if states("input_text.cyd_btn_8_label") not in ["", "unknown", "unavailable"] else "Off AC") | upper }}'
+      - obj: "p2b80"
+        event:
+          "up":
+            - condition: template
+              value_template: '{{ (states("input_text.cyd_btn_8_entity") not in ["", "unknown", "unavailable"]) or True }}'
+            - service: homeassistant.turn_on
+              target:
+                entity_id: '{{ states("input_text.cyd_btn_8_entity") if states("input_text.cyd_btn_8_entity") not in ["", "unknown", "unavailable"] else "script.living_study_off" }}'
       - obj: "p3b11"
         event:
           "up":
@@ -280,3 +293,25 @@ openhasp:
             - service: homeassistant.turn_on
               target:
                 entity_id: 'script.rm4_lr_prism_off_light'
+      - obj: "p4b20"
+        event:
+          "up":
+            - service: openhasp.push_image
+              target: { entity_id: openhasp.hazycyd }
+              data:
+                obj: p4b20
+                image: 'http://192.168.100.193:8123{{ state_attr("camera.cyd_kx_snapshot", "entity_picture") }}'
+                width: 112
+                height: 63
+                fitscreen: true
+      - obj: "p5b20"
+        event:
+          "up":
+            - service: openhasp.push_image
+              target: { entity_id: openhasp.hazycyd }
+              data:
+                obj: p5b20
+                image: 'http://192.168.100.193:8123{{ state_attr("camera.cyd_mk_snapshot", "entity_picture") }}'
+                width: 112
+                height: 63
+                fitscreen: true

@@ -9,8 +9,10 @@ Look: [Mecha Armor UI](https://claude.ai/artifact/X4594PmkBQB1hCrwdjFbVm), "Armo
 |------|---------|
 | 0 | Overlay on every page: left/right edge rails switch pages (wraps around) |
 | 1 | Jurong West: NEA 2-hour forecast + home weather (left), PM2.5 1h and PSI 24h with NEA bands (right) |
-| 2 | Living room: 7 buttons (4 AC scripts, Lights + Fan, Night Off, Main Light) |
+| 2 | Living room: 8 buttons (AC 25/26, Low AC fan modes, Main Light, Dining/Prism fan, Off AC) |
 | 3 | Ceiling fans: dining table and prism fan IR controls |
+| 4 | KX camera thumbnail, refreshed every 10 s while shown |
+| 5 | MK camera thumbnail, refreshed every 10 s while shown |
 
 ## Repo layout
 
@@ -20,6 +22,7 @@ pages/pages.jsonl              GENERATED screen layout, uploaded to the device
 ha/packages/hazy_cyd.yaml      GENERATED button helpers + openHASP object bindings
 ha/packages/hazy_psi.yaml      PM2.5, PSI, NEA forecast sensors and band colours
 ha/packages/hazy_routines.yaml Night Off script, night screen schedule
+ha/packages/hazy_cameras.yaml  Fresh-frame RTSP snapshot cameras + thumbnail refresh
 ```
 
 ## Changing the layout
@@ -104,4 +107,9 @@ To change region, replace `west` in `ha/packages/hazy_psi.yaml` with `north`, `s
 - No PSRAM: about 17 KB of LVGL memory is left with the current pages. Check `http://<device-ip>/api/info/` after changes.
 - openHASP cannot clip shapes. Cut corners are thick lines in the background colour laid over each corner.
 - The default theme adds a gradient to fills; the generator sets `bg_grad_dir: 0` on everything.
+- Camera thumbnails are 112x63 drawn at 2x. Larger frames (e.g. 154x86, 26 KB) fail with
+  `img buffer creation failed` and crash the plate. RTSP URLs live in HA `secrets.yaml`
+  (`cyd_kx_rtsp`, `cyd_mk_rtsp`), never in this repo. The TP-Link `live_view` cameras cache
+  their snapshot for 5 minutes, hence the separate ffmpeg cameras.
+- Plate log: `telnet <device-ip>` (no login) shows MQTT commands and errors live.
 - Screen dims after 60 s idle and never turns off, except 00:00-06:00 (`hazy_routines.yaml`).

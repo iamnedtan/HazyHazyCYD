@@ -65,40 +65,45 @@
 {"page":2,"id":2,"obj":"label","x":44,"y":4,"w":150,"h":22,"text":"LIVING ROOM","text_font":16,"text_color":"#25282A","align":"left","click":0,"text_letter_space":1}
 {"page":2,"id":3,"obj":"label","x":144,"y":8,"w":132,"h":16,"text":"P02","text_font":12,"text_color":"#626766","align":"right","click":0,"text_letter_space":1}
 {"page":2,"id":10,"obj":"btn","x":44,"y":30,"w":111,"h":48,"radius":0,"text":"","bg_color":"#E8E8E4","bg_color02":"#B7B9B7","border_width":0,"outline_width":0,"shadow_width":0,"shadow_opa":0,"bg_grad_dir":0}
-{"page":2,"id":11,"obj":"label","x":48,"y":41,"w":26,"h":26,"text":"\ue717","text_font":24,"text_color":"#626766","align":"center","click":0}
-{"page":2,"id":12,"obj":"label","x":76,"y":35,"w":75,"h":40,"text":"LOW AC LOW FAN","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
+{"page":2,"id":11,"obj":"label","x":48,"y":41,"w":26,"h":26,"text":"\ue01b","text_font":24,"text_color":"#626766","align":"center","click":0}
+{"page":2,"id":12,"obj":"label","x":76,"y":44,"w":75,"h":40,"text":"AC 25","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
 {"page":2,"id":13,"obj":"line","x":142,"y":21,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":14,"obj":"line","x":35,"y":65,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":20,"obj":"btn","x":165,"y":30,"w":111,"h":48,"radius":0,"text":"","bg_color":"#E8E8E4","bg_color02":"#B7B9B7","border_width":0,"outline_width":0,"shadow_width":0,"shadow_opa":0,"bg_grad_dir":0}
-{"page":2,"id":21,"obj":"label","x":169,"y":41,"w":26,"h":26,"text":"\ue210","text_font":24,"text_color":"#626766","align":"center","click":0}
-{"page":2,"id":22,"obj":"label","x":197,"y":35,"w":75,"h":40,"text":"LOW AC HIGH FAN","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
+{"page":2,"id":21,"obj":"label","x":169,"y":41,"w":26,"h":26,"text":"\ue01b","text_font":24,"text_color":"#626766","align":"center","click":0}
+{"page":2,"id":22,"obj":"label","x":197,"y":44,"w":75,"h":40,"text":"AC 26","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
 {"page":2,"id":23,"obj":"line","x":263,"y":21,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":24,"obj":"line","x":156,"y":65,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":30,"obj":"btn","x":44,"y":83,"w":111,"h":48,"radius":0,"text":"","bg_color":"#E8E8E4","bg_color02":"#B7B9B7","border_width":0,"outline_width":0,"shadow_width":0,"shadow_opa":0,"bg_grad_dir":0}
-{"page":2,"id":31,"obj":"label","x":48,"y":94,"w":26,"h":26,"text":"\ue425","text_font":24,"text_color":"#D82F25","align":"center","click":0}
-{"page":2,"id":32,"obj":"label","x":76,"y":88,"w":75,"h":40,"text":"OFF AIRCON","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
+{"page":2,"id":31,"obj":"label","x":48,"y":94,"w":26,"h":26,"text":"\ue717","text_font":24,"text_color":"#626766","align":"center","click":0}
+{"page":2,"id":32,"obj":"label","x":76,"y":88,"w":75,"h":40,"text":"LOW AC LOW FAN","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
 {"page":2,"id":33,"obj":"line","x":142,"y":74,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":34,"obj":"line","x":35,"y":118,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":40,"obj":"btn","x":165,"y":83,"w":111,"h":48,"radius":0,"text":"","bg_color":"#E8E8E4","bg_color02":"#B7B9B7","border_width":0,"outline_width":0,"shadow_width":0,"shadow_opa":0,"bg_grad_dir":0}
-{"page":2,"id":41,"obj":"label","x":169,"y":94,"w":26,"h":26,"text":"\ue01b","text_font":24,"text_color":"#626766","align":"center","click":0}
-{"page":2,"id":42,"obj":"label","x":197,"y":97,"w":75,"h":40,"text":"AC 25","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
+{"page":2,"id":41,"obj":"label","x":169,"y":94,"w":26,"h":26,"text":"\ue210","text_font":24,"text_color":"#626766","align":"center","click":0}
+{"page":2,"id":42,"obj":"label","x":197,"y":88,"w":75,"h":40,"text":"LOW AC HIGH FAN","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
 {"page":2,"id":43,"obj":"line","x":263,"y":74,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":44,"obj":"line","x":156,"y":118,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":50,"obj":"btn","x":44,"y":136,"w":111,"h":48,"radius":0,"text":"","bg_color":"#E8E8E4","bg_color02":"#B7B9B7","border_width":0,"outline_width":0,"shadow_width":0,"shadow_opa":0,"bg_grad_dir":0}
-{"page":2,"id":51,"obj":"label","x":48,"y":147,"w":26,"h":26,"text":"\ue6e8","text_font":24,"text_color":"#626766","align":"center","click":0}
-{"page":2,"id":52,"obj":"label","x":76,"y":141,"w":75,"h":40,"text":"LIGHTS + FAN","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
+{"page":2,"id":51,"obj":"label","x":48,"y":147,"w":26,"h":26,"text":"\ue769","text_font":24,"text_color":"#626766","align":"center","click":0}
+{"page":2,"id":52,"obj":"label","x":76,"y":141,"w":75,"h":40,"text":"MAIN LIGHT","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
 {"page":2,"id":53,"obj":"line","x":142,"y":127,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":54,"obj":"line","x":35,"y":171,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":60,"obj":"btn","x":165,"y":136,"w":111,"h":48,"radius":0,"text":"","bg_color":"#E8E8E4","bg_color02":"#B7B9B7","border_width":0,"outline_width":0,"shadow_width":0,"shadow_opa":0,"bg_grad_dir":0}
-{"page":2,"id":61,"obj":"label","x":169,"y":147,"w":26,"h":26,"text":"\ue594","text_font":24,"text_color":"#626766","align":"center","click":0}
-{"page":2,"id":62,"obj":"label","x":197,"y":150,"w":75,"h":40,"text":"NIGHT OFF","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
+{"page":2,"id":61,"obj":"label","x":169,"y":147,"w":26,"h":26,"text":"\ue210","text_font":24,"text_color":"#626766","align":"center","click":0}
+{"page":2,"id":62,"obj":"label","x":197,"y":141,"w":75,"h":40,"text":"DINING FAN","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
 {"page":2,"id":63,"obj":"line","x":263,"y":127,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":64,"obj":"line","x":156,"y":171,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":70,"obj":"btn","x":44,"y":189,"w":111,"h":48,"radius":0,"text":"","bg_color":"#E8E8E4","bg_color02":"#B7B9B7","border_width":0,"outline_width":0,"shadow_width":0,"shadow_opa":0,"bg_grad_dir":0}
-{"page":2,"id":71,"obj":"label","x":48,"y":200,"w":26,"h":26,"text":"\ue769","text_font":24,"text_color":"#626766","align":"center","click":0}
-{"page":2,"id":72,"obj":"label","x":76,"y":194,"w":75,"h":40,"text":"MAIN LIGHT","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
+{"page":2,"id":71,"obj":"label","x":48,"y":200,"w":26,"h":26,"text":"\ue210","text_font":24,"text_color":"#626766","align":"center","click":0}
+{"page":2,"id":72,"obj":"label","x":76,"y":203,"w":75,"h":40,"text":"PRISM FAN","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
 {"page":2,"id":73,"obj":"line","x":142,"y":180,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":2,"id":74,"obj":"line","x":35,"y":224,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
+{"page":2,"id":80,"obj":"btn","x":165,"y":189,"w":111,"h":48,"radius":0,"text":"","bg_color":"#E8E8E4","bg_color02":"#B7B9B7","border_width":0,"outline_width":0,"shadow_width":0,"shadow_opa":0,"bg_grad_dir":0}
+{"page":2,"id":81,"obj":"label","x":169,"y":200,"w":26,"h":26,"text":"\ue425","text_font":24,"text_color":"#D82F25","align":"center","click":0}
+{"page":2,"id":82,"obj":"label","x":197,"y":203,"w":75,"h":40,"text":"OFF AC","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break"}
+{"page":2,"id":83,"obj":"line","x":263,"y":180,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
+{"page":2,"id":84,"obj":"line","x":156,"y":224,"points":[[7,7],[15,15]],"line_width":7,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page": 3, "comment": "---- page 3 ----"}
 {"page":3,"id":1,"obj":"obj","x":0,"y":0,"w":320,"h":240,"radius":0,"bg_color":"#D9DAD6","bg_opa":255,"border_width":0,"click":0,"bg_grad_dir":0}
 {"page":3,"id":2,"obj":"label","x":44,"y":4,"w":150,"h":22,"text":"CEILING FANS","text_font":16,"text_color":"#25282A","align":"left","click":0,"text_letter_space":1}
@@ -138,7 +143,27 @@
 {"page":3,"id":76,"obj":"btn","x":200,"y":192,"w":74,"h":42,"radius":0,"text":"","bg_color":"#E8E8E4","bg_color02":"#B7B9B7","bg_grad_dir":0,"border_width":0,"outline_width":0,"shadow_width":0,"shadow_opa":0}
 {"page":3,"id":77,"obj":"label","x":203,"y":201,"w":26,"h":26,"text":"\ue335","text_font":24,"text_color":"#626766","align":"center","click":0}
 {"page":3,"id":78,"obj":"label","x":230,"y":196,"w":42,"h":36,"text":"LIGHT OFF","text_font":12,"text_color":"#25282A","align":"left","click":0,"mode":"break","text_letter_space":1}
+{"page": 4, "comment": "---- page 4 ----"}
+{"page":4,"id":1,"obj":"obj","x":0,"y":0,"w":320,"h":240,"radius":0,"bg_color":"#D9DAD6","bg_opa":255,"border_width":0,"click":0,"bg_grad_dir":0}
+{"page":4,"id":2,"obj":"label","x":44,"y":4,"w":150,"h":22,"text":"KX CAMERA","text_font":16,"text_color":"#25282A","align":"left","click":0,"text_letter_space":1}
+{"page":4,"id":3,"obj":"label","x":144,"y":8,"w":132,"h":16,"text":"P04","text_font":12,"text_color":"#626766","align":"right","click":0,"text_letter_space":1}
+{"page":4,"id":10,"obj":"obj","x":44,"y":30,"w":232,"h":208,"radius":0,"bg_color":"#151719","bg_opa":255,"border_width":0,"shadow_width":0,"click":0,"bg_grad_dir":0}
+{"page":4,"id":11,"obj":"line","x":257,"y":17,"points":[[10,10],[22,22]],"line_width":10,"line_color":"#D9DAD6","line_rounded":0,"click":0}
+{"page":4,"id":12,"obj":"line","x":31,"y":219,"points":[[10,10],[22,22]],"line_width":10,"line_color":"#D9DAD6","line_rounded":0,"click":0}
+{"page":4,"id":13,"obj":"label","x":54,"y":36,"w":212,"h":16,"text":"KX \u00b7 TAPO C211","text_font":12,"text_color":"#B7B9B7","align":"left","click":0,"text_letter_space":1}
+{"page":4,"id":14,"obj":"label","x":54,"y":216,"w":212,"h":16,"text":"TAP IMAGE TO REFRESH","text_font":12,"text_color":"#B7B9B7","align":"right","click":0,"text_letter_space":1}
+{"page":4,"id":20,"obj":"img","auto_size":0,"src":"","x":104,"y":102,"w":112,"h":63,"zoom":512,"click":1}
+{"page": 5, "comment": "---- page 5 ----"}
+{"page":5,"id":1,"obj":"obj","x":0,"y":0,"w":320,"h":240,"radius":0,"bg_color":"#D9DAD6","bg_opa":255,"border_width":0,"click":0,"bg_grad_dir":0}
+{"page":5,"id":2,"obj":"label","x":44,"y":4,"w":150,"h":22,"text":"MK CAMERA","text_font":16,"text_color":"#25282A","align":"left","click":0,"text_letter_space":1}
+{"page":5,"id":3,"obj":"label","x":144,"y":8,"w":132,"h":16,"text":"P05","text_font":12,"text_color":"#626766","align":"right","click":0,"text_letter_space":1}
+{"page":5,"id":10,"obj":"obj","x":44,"y":30,"w":232,"h":208,"radius":0,"bg_color":"#151719","bg_opa":255,"border_width":0,"shadow_width":0,"click":0,"bg_grad_dir":0}
+{"page":5,"id":11,"obj":"line","x":257,"y":17,"points":[[10,10],[22,22]],"line_width":10,"line_color":"#D9DAD6","line_rounded":0,"click":0}
+{"page":5,"id":12,"obj":"line","x":31,"y":219,"points":[[10,10],[22,22]],"line_width":10,"line_color":"#D9DAD6","line_rounded":0,"click":0}
+{"page":5,"id":13,"obj":"label","x":54,"y":36,"w":212,"h":16,"text":"MK \u00b7 TAPO C211","text_font":12,"text_color":"#B7B9B7","align":"left","click":0,"text_letter_space":1}
+{"page":5,"id":14,"obj":"label","x":54,"y":216,"w":212,"h":16,"text":"TAP IMAGE TO REFRESH","text_font":12,"text_color":"#B7B9B7","align":"right","click":0,"text_letter_space":1}
+{"page":5,"id":20,"obj":"img","auto_size":0,"src":"","x":104,"y":102,"w":112,"h":63,"zoom":512,"click":1}
 {"page": 1, "comment": "---- page 1 ----"}
-{"page":1,"id":0,"prev":3}
-{"page": 3, "comment": "---- page 3 ----"}
-{"page":3,"id":0,"next":1}
+{"page":1,"id":0,"prev":5}
+{"page": 5, "comment": "---- page 5 ----"}
+{"page":5,"id":0,"next":1}
