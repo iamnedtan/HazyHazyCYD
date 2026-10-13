@@ -1,0 +1,41 @@
+{"comment":"HazyHazyCYD layout. Screen 320x240 landscape. Edge strips 40px (page 0 overlay), content area x 40-280."}
+{"page":0,"comment":"---- Page 0: overlay shown on every page ----"}
+{"page":0,"id":1,"obj":"btn","x":0,"y":0,"w":40,"h":240,"radius":0,"border_side":0,"bg_color":"#1E1E1E","text":"","text_color":"#A0A0A0","text_font":32,"action":{"up":"page prev"}}
+{"page":0,"id":2,"obj":"btn","x":280,"y":0,"w":40,"h":240,"radius":0,"border_side":0,"bg_color":"#1E1E1E","text":"","text_color":"#A0A0A0","text_font":32,"action":{"up":"page next"}}
+{"page":1,"comment":"---- Page 1: Haze (PM2.5 1h on top, PSI 24h below, same size) ----"}
+{"page":1,"id":1,"obj":"label","x":44,"y":4,"w":232,"h":22,"text":" Haze - West","text_font":16,"align":"center","text_color":"#C0C0C0"}
+{"page":1,"id":10,"obj":"obj","x":44,"y":28,"w":232,"h":102,"radius":8,"bg_color":"#141414","border_width":2,"border_color":"#404040","click":0}
+{"page":1,"id":11,"obj":"label","x":50,"y":32,"w":220,"h":20,"text":"PM2.5  1h  (µg/m³)","text_font":16,"align":"center","text_color":"#909090"}
+{"page":1,"id":12,"obj":"label","x":50,"y":56,"w":220,"h":40,"text":"--","text_font":32,"align":"center","text_color":"#FFFFFF"}
+{"page":1,"id":13,"obj":"label","x":50,"y":102,"w":220,"h":22,"text":"","text_font":16,"align":"center","text_color":"#909090"}
+{"page":1,"id":20,"obj":"obj","x":44,"y":134,"w":232,"h":102,"radius":8,"bg_color":"#141414","border_width":2,"border_color":"#404040","click":0}
+{"page":1,"id":21,"obj":"label","x":50,"y":138,"w":220,"h":20,"text":"PSI  24h","text_font":16,"align":"center","text_color":"#909090"}
+{"page":1,"id":22,"obj":"label","x":50,"y":162,"w":220,"h":40,"text":"--","text_font":32,"align":"center","text_color":"#FFFFFF"}
+{"page":1,"id":23,"obj":"label","x":50,"y":208,"w":220,"h":22,"text":"","text_font":16,"align":"center","text_color":"#909090"}
+{"page":2,"comment":"---- Page 2: 6 HA buttons, 2 cols x 3 rows. Labels pushed from HA ----"}
+{"page":2,"id":1,"obj":"btn","x":46,"y":6,"w":111,"h":72,"radius":8,"text":"Button 1","text_font":24}
+{"page":2,"id":2,"obj":"btn","x":163,"y":6,"w":111,"h":72,"radius":8,"text":"Button 2","text_font":24}
+{"page":2,"id":3,"obj":"btn","x":46,"y":84,"w":111,"h":72,"radius":8,"text":"Button 3","text_font":24}
+{"page":2,"id":4,"obj":"btn","x":163,"y":84,"w":111,"h":72,"radius":8,"text":"Button 4","text_font":24}
+{"page":2,"id":5,"obj":"btn","x":46,"y":162,"w":111,"h":72,"radius":8,"text":"Button 5","text_font":24}
+{"page":2,"id":6,"obj":"btn","x":163,"y":162,"w":111,"h":72,"radius":8,"text":"Button 6","text_font":24}
+{"page":3,"comment":"---- Page 3: house status, 6 rows: icon (1x) / name (2x) / value (3x) ----"}
+{"page":3,"id":1,"obj":"label","x":44,"y":4,"w":232,"h":22,"text":" Home","text_font":16,"align":"center","text_color":"#C0C0C0"}
+{"page":3,"id":11,"obj":"label","x":46,"y":32,"w":30,"h":28,"text":"","text_font":24,"text_color":"#A0A0A0"}
+{"page":3,"id":21,"obj":"label","x":78,"y":36,"w":120,"h":22,"text":"Temperature","text_font":16}
+{"page":3,"id":31,"obj":"label","x":198,"y":32,"w":78,"h":28,"text":"--","text_font":24,"align":"right"}
+{"page":3,"id":12,"obj":"label","x":46,"y":67,"w":30,"h":28,"text":"","text_font":24,"text_color":"#A0A0A0"}
+{"page":3,"id":22,"obj":"label","x":78,"y":71,"w":120,"h":22,"text":"Humidity","text_font":16}
+{"page":3,"id":32,"obj":"label","x":198,"y":67,"w":78,"h":28,"text":"--","text_font":24,"align":"right"}
+{"page":3,"id":13,"obj":"label","x":46,"y":102,"w":30,"h":28,"text":"","text_font":24,"text_color":"#A0A0A0"}
+{"page":3,"id":23,"obj":"label","x":78,"y":106,"w":120,"h":22,"text":"Front door","text_font":16}
+{"page":3,"id":33,"obj":"label","x":198,"y":102,"w":78,"h":28,"text":"--","text_font":24,"align":"right"}
+{"page":3,"id":14,"obj":"label","x":46,"y":137,"w":30,"h":28,"text":"","text_font":24,"text_color":"#A0A0A0"}
+{"page":3,"id":24,"obj":"label","x":78,"y":141,"w":120,"h":22,"text":"Windows","text_font":16}
+{"page":3,"id":34,"obj":"label","x":198,"y":137,"w":78,"h":28,"text":"--","text_font":24,"align":"right"}
+{"page":3,"id":15,"obj":"label","x":46,"y":172,"w":30,"h":28,"text":"","text_font":24,"text_color":"#A0A0A0"}
+{"page":3,"id":25,"obj":"label","x":78,"y":176,"w":120,"h":22,"text":"Lights on","text_font":16}
+{"page":3,"id":35,"obj":"label","x":198,"y":172,"w":78,"h":28,"text":"--","text_font":24,"align":"right"}
+{"page":3,"id":16,"obj":"label","x":46,"y":207,"w":30,"h":28,"text":"","text_font":24,"text_color":"#A0A0A0"}
+{"page":3,"id":26,"obj":"label","x":78,"y":211,"w":120,"h":22,"text":"Power","text_font":16}
+{"page":3,"id":36,"obj":"label","x":198,"y":207,"w":78,"h":28,"text":"--","text_font":24,"align":"right"}

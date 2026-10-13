@@ -1,0 +1,121 @@
+# CYD plate: button helpers + openHASP object bindings.
+# Plate name on the device must be "hazycyd" (MQTT topic hasp/hazycyd/...).
+#
+# Page 2 buttons:
+#   - Rename a button: change input_text.cyd_btn_N_label in the HA UI. No reflash.
+#     (No "initial:" on purpose - it would reset your label on every HA restart.
+#      Empty label falls back to "Button N".)
+#   - Make a button do something: write an automation triggered by
+#     input_button.cyd_btn_N being pressed (state change).
+
+input_text:
+  cyd_btn_1_label: { name: CYD Button 1 Label, max: 20 }
+  cyd_btn_2_label: { name: CYD Button 2 Label, max: 20 }
+  cyd_btn_3_label: { name: CYD Button 3 Label, max: 20 }
+  cyd_btn_4_label: { name: CYD Button 4 Label, max: 20 }
+  cyd_btn_5_label: { name: CYD Button 5 Label, max: 20 }
+  cyd_btn_6_label: { name: CYD Button 6 Label, max: 20 }
+
+input_button:
+  cyd_btn_1: { name: CYD Button 1 }
+  cyd_btn_2: { name: CYD Button 2 }
+  cyd_btn_3: { name: CYD Button 3 }
+  cyd_btn_4: { name: CYD Button 4 }
+  cyd_btn_5: { name: CYD Button 5 }
+  cyd_btn_6: { name: CYD Button 6 }
+
+openhasp:
+  hazycyd:
+    objects:
+      # ---------- Page 1: Haze ----------
+      - obj: "p1b1"
+        properties:
+          "text": '{{ "" }} Haze - West  {{ states("sensor.haze_updated") }}'
+      # PM2.5 1h block (top)
+      - obj: "p1b10"
+        properties:
+          "border_color": '{{ state_attr("sensor.haze_pm25_1h_west_band", "color") }}'
+      - obj: "p1b12"
+        properties:
+          "text": '{{ states("sensor.haze_pm25_1h_west") }}'
+          "text_color": '{{ state_attr("sensor.haze_pm25_1h_west_band", "color") }}'
+      - obj: "p1b13"
+        properties:
+          "text": '{{ states("sensor.haze_pm25_1h_west_band") }}'
+          "text_color": '{{ state_attr("sensor.haze_pm25_1h_west_band", "color") }}'
+      # PSI 24h block (bottom)
+      - obj: "p1b20"
+        properties:
+          "border_color": '{{ state_attr("sensor.haze_psi_24h_west_band", "color") }}'
+      - obj: "p1b22"
+        properties:
+          "text": '{{ states("sensor.haze_psi_24h_west") }}'
+          "text_color": '{{ state_attr("sensor.haze_psi_24h_west_band", "color") }}'
+      - obj: "p1b23"
+        properties:
+          "text": '{{ states("sensor.haze_psi_24h_west_band") }}'
+          "text_color": '{{ state_attr("sensor.haze_psi_24h_west_band", "color") }}'
+
+      # ---------- Page 2: buttons ----------
+      - obj: "p2b1"
+        properties: { "text": '{{ states("input_text.cyd_btn_1_label") | default("Button 1", true) }}' }
+        event:
+          "up":
+            - service: input_button.press
+              target: { entity_id: input_button.cyd_btn_1 }
+      - obj: "p2b2"
+        properties: { "text": '{{ states("input_text.cyd_btn_2_label") | default("Button 2", true) }}' }
+        event:
+          "up":
+            - service: input_button.press
+              target: { entity_id: input_button.cyd_btn_2 }
+      - obj: "p2b3"
+        properties: { "text": '{{ states("input_text.cyd_btn_3_label") | default("Button 3", true) }}' }
+        event:
+          "up":
+            - service: input_button.press
+              target: { entity_id: input_button.cyd_btn_3 }
+      - obj: "p2b4"
+        properties: { "text": '{{ states("input_text.cyd_btn_4_label") | default("Button 4", true) }}' }
+        event:
+          "up":
+            - service: input_button.press
+              target: { entity_id: input_button.cyd_btn_4 }
+      - obj: "p2b5"
+        properties: { "text": '{{ states("input_text.cyd_btn_5_label") | default("Button 5", true) }}' }
+        event:
+          "up":
+            - service: input_button.press
+              target: { entity_id: input_button.cyd_btn_5 }
+      - obj: "p2b6"
+        properties: { "text": '{{ states("input_text.cyd_btn_6_label") | default("Button 6", true) }}' }
+        event:
+          "up":
+            - service: input_button.press
+              target: { entity_id: input_button.cyd_btn_6 }
+
+      # ---------- Page 3: status (PLACEHOLDER entity IDs - replace) ----------
+      - obj: "p3b31"
+        properties:
+          "text": '{{ states("sensor.living_room_temperature") | float(0) | round(1) }}°C'
+      - obj: "p3b32"
+        properties:
+          "text": '{{ states("sensor.living_room_humidity") | int(0) }}%'
+      - obj: "p3b13"
+        properties:
+          "text": '{{ "" if is_state("binary_sensor.front_door", "on") else "" }}'
+      - obj: "p3b33"
+        properties:
+          "text": '{{ "Open" if is_state("binary_sensor.front_door", "on") else "Closed" }}'
+          "text_color": '{{ "#FF851B" if is_state("binary_sensor.front_door", "on") else "#FFFFFF" }}'
+      - obj: "p3b34"
+        properties:
+          "text": '{{ "Open" if is_state("binary_sensor.windows", "on") else "Closed" }}'
+          "text_color": '{{ "#FF851B" if is_state("binary_sensor.windows", "on") else "#FFFFFF" }}'
+      - obj: "p3b35"
+        # Real template, no placeholder: counts every light that is on.
+        properties:
+          "text": '{{ states.light | selectattr("state", "eq", "on") | list | count }}'
+      - obj: "p3b36"
+        properties:
+          "text": '{{ states("sensor.house_power") | int(0) }} W'

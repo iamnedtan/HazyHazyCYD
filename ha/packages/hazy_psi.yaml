@@ -1,0 +1,70 @@
+# Haze data for the West region (Jurong West) from data.gov.sg.
+# To use another region, replace "west" with north / south / east / central.
+
+rest:
+  - resource: https://api-open.data.gov.sg/v2/real-time/api/pm25
+    scan_interval: 900
+    sensor:
+      - name: Haze PM25 1h West
+        unique_id: haze_pm25_1h_west
+        unit_of_measurement: "µg/m³"
+        state_class: measurement
+        availability: "{{ value_json is defined and value_json.code == 0 }}"
+        value_template: "{{ value_json.data['items'][0].readings.pm25_one_hourly.west }}"
+
+  - resource: https://api-open.data.gov.sg/v2/real-time/api/psi
+    scan_interval: 900
+    sensor:
+      - name: Haze PSI 24h West
+        unique_id: haze_psi_24h_west
+        unit_of_measurement: PSI
+        state_class: measurement
+        availability: "{{ value_json is defined and value_json.code == 0 }}"
+        value_template: "{{ value_json.data['items'][0].readings.psi_twenty_four_hourly.west }}"
+      - name: Haze Updated
+        unique_id: haze_updated
+        availability: "{{ value_json is defined and value_json.code == 0 }}"
+        # "2026-10-13T10:00:00+08:00" -> "10:00"
+        value_template: "{{ value_json.data['items'][0].timestamp[11:16] }}"
+
+template:
+  - sensor:
+      # NEA 1-hr PM2.5 bands: I Normal 0-55, II Elevated 56-150, III High 151-250, IV Very High >250
+      - name: Haze PM25 1h West Band
+        unique_id: haze_pm25_1h_west_band
+        state: >
+          {% set v = states('sensor.haze_pm25_1h_west') | int(-1) %}
+          {% if v < 0 %}--
+          {% elif v <= 55 %}Normal
+          {% elif v <= 150 %}Elevated
+          {% elif v <= 250 %}High
+          {% else %}Very High{% endif %}
+        attributes:
+          color: >
+            {% set v = states('sensor.haze_pm25_1h_west') | int(-1) %}
+            {% if v < 0 %}#909090
+            {% elif v <= 55 %}#2ECC40
+            {% elif v <= 150 %}#FFDC00
+            {% elif v <= 250 %}#FF851B
+            {% else %}#FF4136{% endif %}
+
+      # NEA PSI bands: Good 0-50, Moderate 51-100, Unhealthy 101-200, Very Unhealthy 201-300, Hazardous >300
+      - name: Haze PSI 24h West Band
+        unique_id: haze_psi_24h_west_band
+        state: >
+          {% set v = states('sensor.haze_psi_24h_west') | int(-1) %}
+          {% if v < 0 %}--
+          {% elif v <= 50 %}Good
+          {% elif v <= 100 %}Moderate
+          {% elif v <= 200 %}Unhealthy
+          {% elif v <= 300 %}Very Unhealthy
+          {% else %}Hazardous{% endif %}
+        attributes:
+          color: >
+            {% set v = states('sensor.haze_psi_24h_west') | int(-1) %}
+            {% if v < 0 %}#909090
+            {% elif v <= 50 %}#2ECC40
+            {% elif v <= 100 %}#FFDC00
+            {% elif v <= 200 %}#FF851B
+            {% elif v <= 300 %}#FF4136
+            {% else %}#B10DC9{% endif %}
