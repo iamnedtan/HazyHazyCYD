@@ -3,6 +3,7 @@
 Home Assistant wall panel on a Cheap Yellow Display (ESP32-2432S028R, dual-USB version), running [openHASP](https://www.openhasp.com).
 
 The device only draws pages and reports touches over MQTT. All data and logic live in Home Assistant.
+NEA data (PM2.5, PSI, 2-hour forecast) is polled every 5 minutes.
 Look: [Mecha Armor UI](https://claude.ai/artifact/X4594PmkBQB1hCrwdjFbVm), "Armor Plate" (light) draft.
 
 | Page | Content |

@@ -30,9 +30,9 @@ input_text:
 openhasp:
   hazycyd:
     objects:
-      - obj: "p1b3"
+      - obj: "p1b4"
         properties:
-          "text": '{{ states("sensor.haze_updated") }} · P01'
+          "text": '{{ now().strftime("%H:%M") }}'
       - obj: "p1b14"
         properties:
           "text": '{% set f = states("sensor.nea_forecast_jurong_west") %}{% if "Thundery" in f %}{% elif "Heavy" in f %}{% elif "Showers" in f %}{% elif "Rain" in f %}{% elif "Hazy" in f %}{% elif "Mist" in f %}{% elif "Fog" in f %}{% elif "Windy" in f %}{% elif "Partly Cloudy (Night)" in f %}{% elif "Partly Cloudy" in f %}{% elif "Cloudy" in f %}{% elif "Night" in f %}{% elif "Fair" in f %}{% else %}{% endif %}'
@@ -50,93 +50,102 @@ openhasp:
           "text": 'HUM {{ states("sensor.home_humidity") | int(0) }}%'
       - obj: "p1b19"
         properties:
+          "text": 'UPD {{ states("sensor.nea_forecast_jurong_west_updated") }}'
+      - obj: "p1b20"
+        properties:
           "text": 'TILL {{ states("sensor.nea_forecast_jurong_west_until") }}'
+      - obj: "p1b37"
+        properties:
+          "text": '{{ states("sensor.haze_pm25_updated") }}'
       - obj: "p1b36"
         properties:
           "text": '{{ states("sensor.haze_pm25_1h_west") }}'
-      - obj: "p1b37"
+      - obj: "p1b38"
         properties:
           "text": '{{ states("sensor.haze_pm25_1h_west_band") | upper }}'
           "bg_color": '{{ state_attr("sensor.haze_pm25_1h_west_band", "chip") }}'
           "text_color": '{{ state_attr("sensor.haze_pm25_1h_west_band", "chip_text") }}'
-      - obj: "p1b40"
-        properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 0.0 else "#C7C9C6" }}'
       - obj: "p1b41"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 20.8 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 0.0 else "#C7C9C6" }}'
       - obj: "p1b42"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 41.7 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 20.8 else "#C7C9C6" }}'
       - obj: "p1b43"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 62.5 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 41.7 else "#C7C9C6" }}'
       - obj: "p1b44"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 83.3 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 62.5 else "#C7C9C6" }}'
       - obj: "p1b45"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 104.2 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 83.3 else "#C7C9C6" }}'
       - obj: "p1b46"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 125.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 104.2 else "#C7C9C6" }}'
       - obj: "p1b47"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 145.8 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 125.0 else "#C7C9C6" }}'
       - obj: "p1b48"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 166.7 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 145.8 else "#C7C9C6" }}'
       - obj: "p1b49"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 187.5 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 166.7 else "#C7C9C6" }}'
       - obj: "p1b50"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 208.3 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 187.5 else "#C7C9C6" }}'
       - obj: "p1b51"
         properties:
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 208.3 else "#C7C9C6" }}'
+      - obj: "p1b52"
+        properties:
           "bg_color": '{{ "#292D2F" if states("sensor.haze_pm25_1h_west") | float(0) > 229.2 else "#C7C9C6" }}'
+      - obj: "p1b67"
+        properties:
+          "text": '{{ states("sensor.haze_updated") }}'
       - obj: "p1b66"
         properties:
           "text": '{{ states("sensor.haze_psi_24h_west") }}'
-      - obj: "p1b67"
+      - obj: "p1b68"
         properties:
           "text": '{{ states("sensor.haze_psi_24h_west_band") | upper }}'
           "bg_color": '{{ state_attr("sensor.haze_psi_24h_west_band", "chip") }}'
           "text_color": '{{ state_attr("sensor.haze_psi_24h_west_band", "chip_text") }}'
-      - obj: "p1b70"
-        properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 0.0 else "#C7C9C6" }}'
       - obj: "p1b71"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 25.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 0.0 else "#C7C9C6" }}'
       - obj: "p1b72"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 50.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 25.0 else "#C7C9C6" }}'
       - obj: "p1b73"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 75.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 50.0 else "#C7C9C6" }}'
       - obj: "p1b74"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 100.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 75.0 else "#C7C9C6" }}'
       - obj: "p1b75"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 125.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 100.0 else "#C7C9C6" }}'
       - obj: "p1b76"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 150.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 125.0 else "#C7C9C6" }}'
       - obj: "p1b77"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 175.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 150.0 else "#C7C9C6" }}'
       - obj: "p1b78"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 200.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 175.0 else "#C7C9C6" }}'
       - obj: "p1b79"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 225.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 200.0 else "#C7C9C6" }}'
       - obj: "p1b80"
         properties:
-          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 250.0 else "#C7C9C6" }}'
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 225.0 else "#C7C9C6" }}'
       - obj: "p1b81"
+        properties:
+          "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 250.0 else "#C7C9C6" }}'
+      - obj: "p1b82"
         properties:
           "bg_color": '{{ "#292D2F" if states("sensor.haze_psi_24h_west") | float(0) > 275.0 else "#C7C9C6" }}'
       - obj: "p2b12"

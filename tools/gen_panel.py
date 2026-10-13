@@ -24,7 +24,10 @@ PSI_SENSOR = "sensor.haze_psi_24h_west"
 PSI_BAND = "sensor.haze_psi_24h_west_band"
 UPDATED_SENSOR = "sensor.haze_updated"
 AREA = "JURONG WEST"
+PM_UPDATED = "sensor.haze_pm25_updated"                 # "11:00"
+PSI_UPDATED = UPDATED_SENSOR                            # "11:00"
 WX_FORECAST = "sensor.nea_forecast_jurong_west"         # NEA 2-hour forecast text
+WX_UPDATED = "sensor.nea_forecast_jurong_west_updated"  # "11:06"
 WX_UNTIL = "sensor.nea_forecast_jurong_west_until"      # "13:00"
 WX_TEMP = "sensor.home_temperature"
 WX_FEELS = "sensor.home_apparent_temperature"
@@ -203,8 +206,10 @@ for oid, x, icon, word, side, action in [
 
 
 # Page 1: weather (left) + haze (right) ---------------------------------------
-idx1 = page_base(1, AREA, "P01")
-bind(idx1, {"text": f'{{{{ states("{UPDATED_SENSOR}") }}}} · P01'})
+page_base(1, "", "P01")
+clock = label(1, CX, 4, 52, 22, "--:--", font=16, text_letter_space=1)
+bind(clock, {"text": '{{ now().strftime("%H:%M") }}'})   # HA re-renders every minute
+label(1, CX + 54, 4, 120, 22, AREA, font=16, color=TEXT_SECONDARY, text_letter_space=1)
 
 # NEA 2-hour forecast text -> built-in MDI weather icon.
 WX_ICONS = [
@@ -231,9 +236,10 @@ def weather_panel(page, x, y, w, h):
     icon = label(page, ix, y + 20, iw, 36, "\uE590", font=32)
     cond = label(page, ix, y + 58, iw, 38, "--", font=16, mode="break", text_letter_space=1)
     temp = label(page, ix, y + 98, iw, 38, "--", font=32)
-    feels = label(page, ix, y + 140, iw, 16, "FEELS --", color=TEXT_SECONDARY, text_letter_space=1)
-    hum = label(page, ix, y + 158, iw, 16, "HUM --", color=TEXT_SECONDARY, text_letter_space=1)
-    till = label(page, ix, y + 186, iw, 16, "", color=TEXT_SECONDARY, text_letter_space=1)
+    feels = label(page, ix, y + 138, iw, 16, "FEELS --", color=TEXT_SECONDARY, text_letter_space=1)
+    hum = label(page, ix, y + 154, iw, 16, "HUM --", color=TEXT_SECONDARY, text_letter_space=1)
+    upd = label(page, ix, y + 172, iw, 16, "", color=TEXT_SECONDARY, text_letter_space=1)
+    till = label(page, ix, y + 188, iw, 16, "", color=TEXT_SECONDARY, text_letter_space=1)
 
     f = f'states("{WX_FORECAST}")'
     chain = "".join(f'{{% elif "{k}" in f %}}{v}' for k, v in WX_ICONS)[2:].replace(" elif", " if", 1)
@@ -243,10 +249,11 @@ def weather_panel(page, x, y, w, h):
     bind(temp, {"text": f'{{{{ states("{WX_TEMP}") | float(0) | round(1) }}}}°'})
     bind(feels, {"text": f'FEELS {{{{ states("{WX_FEELS}") | float(0) | round(1) }}}}°'})
     bind(hum, {"text": f'HUM {{{{ states("{WX_HUM}") | int(0) }}}}%'})
+    bind(upd, {"text": f'UPD {{{{ states("{WX_UPDATED}") }}}}'})
     bind(till, {"text": f'TILL {{{{ states("{WX_UNTIL}") }}}}'})
 
 
-def readout(page, x, y, w, caption, unit, sensor, band, scale):
+def readout(page, x, y, w, caption, unit, sensor, band, scale, updated):
     panel(page, x, y, w, 102)
     ix, iw = x + 8, w - 16
     label(page, ix, y + 4, iw, 16, caption, color=TEXT_SECONDARY, text_letter_space=1)
@@ -255,6 +262,8 @@ def readout(page, x, y, w, caption, unit, sensor, band, scale):
     add(page, "obj", x=ix, y=y + 21, w=iw, h=36, radius=0, bg_color=DARK_ARMOR,
         bg_opa=255, border_width=0, shadow_width=0, click=0)
     value = label(page, ix + 6, y + 21, iw - 12, 36, "--", font=32, color=ARMOR_LIGHT)
+    upd = label(page, ix + iw - 40, y + 38, 36, 16, "", color=ARMOR_GRAY, align="right")
+    bind(upd, {"text": f'{{{{ states("{updated}") }}}}'})
     chip_y, chip_h = y + 60, 22
     chip = label(page, ix, chip_y, iw, chip_h, "", font=12, color=BLACK_METAL,
                  align="center", bg_opa=255, bg_color=ARMOR_GRAY, pad_top=4,
@@ -284,9 +293,9 @@ COL_W = (CW - 4) // 2          # two columns, 4px gap
 id_block(1, 10)
 weather_panel(1, CX, 30, COL_W, 208)
 id_block(1, 30)
-readout(1, CX + COL_W + 4, 30, COL_W, "PM2.5 1H", "µg/m³", PM_SENSOR, PM_BAND, PM_SCALE)
+readout(1, CX + COL_W + 4, 30, COL_W, "PM2.5 1H", "µg/m³", PM_SENSOR, PM_BAND, PM_SCALE, PM_UPDATED)
 id_block(1, 60)
-readout(1, CX + COL_W + 4, 136, COL_W, "PSI 24H", "INDEX", PSI_SENSOR, PSI_BAND, PSI_SCALE)
+readout(1, CX + COL_W + 4, 136, COL_W, "PSI 24H", "INDEX", PSI_SENSOR, PSI_BAND, PSI_SCALE, PSI_UPDATED)
 
 
 # Page 2: buttons ------------------------------------------------------------

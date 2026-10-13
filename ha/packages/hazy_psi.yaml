@@ -3,7 +3,7 @@
 
 rest:
   - resource: https://api-open.data.gov.sg/v2/real-time/api/pm25
-    scan_interval: 900
+    scan_interval: 300
     sensor:
       - name: Haze PM25 1h West
         unique_id: haze_pm25_1h_west
@@ -11,9 +11,13 @@ rest:
         state_class: measurement
         availability: "{{ value_json is defined and value_json.code == 0 }}"
         value_template: "{{ value_json.data['items'][0].readings.pm25_one_hourly.west }}"
+      - name: Haze PM25 Updated
+        unique_id: haze_pm25_updated
+        availability: "{{ value_json is defined and value_json.code == 0 }}"
+        value_template: "{{ value_json.data['items'][0].timestamp[11:16] }}"
 
   - resource: https://api-open.data.gov.sg/v2/real-time/api/psi
-    scan_interval: 900
+    scan_interval: 300
     sensor:
       - name: Haze PSI 24h West
         unique_id: haze_psi_24h_west
@@ -29,7 +33,7 @@ rest:
 
   # NEA 2-hour forecast for the Jurong West area.
   - resource: https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast
-    scan_interval: 900
+    scan_interval: 300
     sensor:
       - name: NEA Forecast Jurong West
         unique_id: nea_forecast_jurong_west
@@ -37,6 +41,11 @@ rest:
         value_template: >
           {{ (value_json.data['items'][0].forecasts
               | selectattr('area', 'eq', 'Jurong West') | first).forecast }}
+      - name: NEA Forecast Jurong West Updated
+        unique_id: nea_forecast_jurong_west_updated
+        availability: "{{ value_json is defined and value_json.code == 0 }}"
+        # update_timestamp "2026-10-13T11:06:51+08:00" -> "11:06"
+        value_template: "{{ value_json.data['items'][0].update_timestamp[11:16] }}"
       - name: NEA Forecast Jurong West Until
         unique_id: nea_forecast_jurong_west_until
         availability: "{{ value_json is defined and value_json.code == 0 }}"
