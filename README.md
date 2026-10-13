@@ -23,20 +23,38 @@ ha/packages/hazy_cyd.yaml  Button helpers + openHASP object bindings
 
 ### 1. Flash the firmware
 
-1. Open the openHASP web installer in Chrome or Edge: <https://install.openhasp.com> (if the CYD builds are missing there, use the nightly installer <https://nightly.openhasp.com>).
-2. Pick the firmware build `esp32-2432s028r-st7789_4MB`.
-3. Hold **BOOT** on the board, plug in USB, release BOOT, then flash.
-4. If the screen stays blank, shows inverted colours or is mirrored, flash `esp32-2432s028r_v2_4MB` instead.
-   Do not use `esp32-2432s028r_4MB`; that build is for the single-USB board.
+Tested on this board (dual-USB, ESP32-D0WD-V3) with openHASP **0.7.0-rc13**, build `esp32-2432s028r_4MB` (ILI9341 driver).
+Colours and orientation are correct with this build. No ST7789 build exists in the 0.7.0-rc13 release.
+
+From the command line:
+
+1. Download `sunton.zip` from the [0.7.0-rc13 release](https://github.com/HASwitchPlate/openHASP/releases/tag/0.7.0-rc13) and extract
+   `esp32-2432s028r_full_4MB_v0.7.0-rc13_042fe05.bin`.
+2. Install esptool: `python3 -m venv .venv && .venv/bin/pip install esptool`.
+3. Flash:
+   ```bash
+   .venv/bin/esptool --port /dev/ttyUSB0 erase-flash
+   .venv/bin/esptool --port /dev/ttyUSB0 --baud 921600 write-flash 0x0 esp32-2432s028r_full_4MB_v0.7.0-rc13_042fe05.bin
+   ```
+
+Alternatively use the web installer in Chrome: <https://nightly.openhasp.com>, board "Sunton 2432S028R".
+
+On Linux your user must be in the `dialout` group to open `/dev/ttyUSB0`.
+If flashing fails with `Failed to connect`, hold BOOT, tap RST, release BOOT and retry.
 
 ### 2. Configure the device
 
-1. On first boot the device starts a temporary Wi-Fi access point and shows a QR code. Connect to it (or use the touchscreen) and enter your Wi-Fi details.
-2. Open `http://<device-ip>` in a browser.
-3. **Settings > MQTT**: broker = HA IP, port 1883, user/password = a dedicated HA user (for example `cyd`), **Plate name = `hazycyd`**.
-4. **Settings > Display**: orientation landscape (90° or 270°, whichever is upright), set idle dim/off times.
-5. Calibrate touch if taps land in the wrong place.
-6. **File Editor**: upload `pages/pages.jsonl`, then reboot.
+1. On first boot the device starts a temporary access point `HASP-xxxxxx` (password `haspadmin`) and shows a QR code.
+   Connect to it and enter your Wi-Fi details at `http://192.168.4.1`.
+2. **Touch does not work until it is calibrated.** Send `calibrate` on the serial console (115200 baud) and tap each target.
+   The calibration is saved to the device config.
+3. Open `http://<device-ip>`, **Configuration > MQTT Settings**:
+   - Hostname: `hazycyd` (this is the plate name and MQTT topic, not the broker)
+   - Broker Server Name: HA IP address, port `1883`
+   - Username / password: a dedicated HA user
+4. Set landscape rotation: `rotate` = `1` (Configuration > Display, or POST `{"rotate":1}` to `/api/config/gui/`).
+5. Upload `pages/pages.jsonl` with the File Editor (or `curl -F "data=@pages/pages.jsonl;filename=/pages.jsonl" http://<device-ip>/edit`), then reboot (`http://<device-ip>/reboot`).
+6. Check `http://<device-ip>/api/info/`: MQTT status should be `Connected`.
 
 ### 3. Home Assistant
 
