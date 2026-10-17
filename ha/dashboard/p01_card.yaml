@@ -78,6 +78,16 @@ custom_fields:
       var hmText = function (t) { return two(t.getUTCHours()) + ':' + two(t.getUTCMinutes()); };
       var dateText = function (t) { return two(t.getUTCDate()) + ' ' + mons[t.getUTCMonth()]; };
       var srcText = function () { return card._cydSynced ? 'HA TIME' : 'TABLET TIME'; };
+      // Day of year (001-366) and ISO 8601 week (01-53; weeks start Monday,
+      // week 1 holds the year's first Thursday).
+      var doyText = function (t) {
+        var d0 = Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate());
+        var n = Math.round((d0 - Date.UTC(t.getUTCFullYear(), 0, 1)) / 86400000) + 1;
+        var w = new Date(d0);
+        w.setUTCDate(w.getUTCDate() + 4 - (w.getUTCDay() || 7));
+        var wk = Math.ceil(((w - Date.UTC(w.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7);
+        return 'DAY ' + (n < 100 ? '0' : '') + two(n) + ' · WK ' + two(wk);
+      };
       var now = sgt();
       var clock = '<div style="' + panel + '">' +
         '<div style="' + row + label + '"><span>SYSTEM CLOCK</span><span>SGT · <span id="cyd-src">' + srcText() + '</span></span></div>' +
@@ -89,7 +99,7 @@ custom_fields:
             '<div id="cyd-day" style="font-size:' + v(sz.mid) + ';font-weight:700;letter-spacing:.06em;line-height:1.3;">' + days[now.getUTCDay()] + '</div>' +
             '<div id="cyd-date" style="font-size:' + v(sz.mid) + ';letter-spacing:.06em;line-height:1.3;">' + dateText(now) + '</div>' +
             '<div id="cyd-year" style="font-size:' + v(sz.mid) + ';letter-spacing:.06em;line-height:1.3;">' + now.getUTCFullYear() + '</div></div></div>' +
-        '<div style="' + small + '">JURONG WEST</div></div>';
+        '<div style="' + row + small + '"><span>JURONG WEST</span><span id="cyd-doy">' + doyText(now) + '</span></div></div>';
 
       if (!card._cydTimer) {
         var sync = function () {
@@ -114,11 +124,12 @@ custom_fields:
           var t = sgt();
           hm.textContent = hmText(t);
           ss.textContent = two(t.getUTCSeconds());
-          var dy = q('#cyd-day'), dt = q('#cyd-date'), yr = q('#cyd-year'), src = q('#cyd-src');
+          var dy = q('#cyd-day'), dt = q('#cyd-date'), yr = q('#cyd-year'), src = q('#cyd-src'), doy = q('#cyd-doy');
           if (dy) dy.textContent = days[t.getUTCDay()];
           if (dt) dt.textContent = dateText(t);
           if (yr) yr.textContent = t.getUTCFullYear();
           if (src) src.textContent = srcText();
+          if (doy) doy.textContent = doyText(t);
         }, 1000);
       }
 

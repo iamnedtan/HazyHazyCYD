@@ -234,7 +234,9 @@ def weather_panel(page, x, y, w, h):
     ix, iw = x + 8, w - 16
     label(page, ix, y + 4, iw, 16, "WEATHER · 2H", color=TEXT_SECONDARY, text_letter_space=1)
     icon = label(page, ix, y + 20, iw, 36, "\uE590", font=32)
-    cond = label(page, ix, y + 58, iw, 38, "--", font=16, mode="break", text_letter_space=1)
+    # "crop": wraps but never grows past its box (a "break" label grows taller
+    # and overlaps the temperature). Long forecasts switch to the 12pt font.
+    cond = label(page, ix, y + 58, iw, 38, "--", font=16, mode="crop")
     temp = label(page, ix, y + 98, iw, 38, "--", font=32)
     feels = label(page, ix, y + 138, iw, 16, "FEELS --", color=TEXT_SECONDARY, text_letter_space=1)
     hum = label(page, ix, y + 154, iw, 16, "HUM --", color=TEXT_SECONDARY, text_letter_space=1)
@@ -244,8 +246,18 @@ def weather_panel(page, x, y, w, h):
     f = f'states("{WX_FORECAST}")'
     chain = "".join(f'{{% elif "{k}" in f %}}{v}' for k, v in WX_ICONS)[2:].replace(" elif", " if", 1)
     bind(icon, {"text": f'{{% set f = {f} %}}{{%{chain}{{% else %}}\uE590{{% endif %}}'})
-    bind(cond, {"text": f'{{{{ {f} | replace(" (Day)", "") | replace(" (Night)", "")'
-                        f' | replace(" with Gusty Winds", " + WIND") | upper }}}}'})
+    short = (f'{f} | replace(" (Day)", "") | replace(" (Night)", "")'
+             f' | replace(" with Gusty Winds", " + WIND") | upper')
+    # HA does the line breaking (panel "crop" labels do not wrap): about 11
+    # characters per line fit at 16pt, 15 at 12pt. Use 16pt when the text fits
+    # on 2 lines, else 12pt.
+    fits16 = (f'(({short}) | wordwrap(11, break_long_words=false, wrapstring="\\n")).split("\\n")'
+              f' | length <= 2 and ({short}).split(" ") | map("length") | max <= 11')
+    bind(cond, {
+        "text": (f'{{% if {fits16} %}}{{{{ ({short}) | wordwrap(11, break_long_words=false, wrapstring="\\n") }}}}'
+                 f'{{% else %}}{{{{ ({short}) | wordwrap(15, break_long_words=false, wrapstring="\\n") }}}}{{% endif %}}'),
+        "text_font": f'{{{{ 16 if {fits16} else 12 }}}}',
+    })
     bind(temp, {"text": f'{{{{ states("{WX_TEMP}") | float(0) | round(1) }}}}°'})
     bind(feels, {"text": f'FEELS {{{{ states("{WX_FEELS}") | float(0) | round(1) }}}}°'})
     bind(hum, {"text": f'HUM {{{{ states("{WX_HUM}") | int(0) }}}}%'})

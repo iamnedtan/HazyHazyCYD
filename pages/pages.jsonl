@@ -13,7 +13,7 @@
 {"page":1,"id":12,"obj":"line","x":31,"y":219,"points":[[10,10],[22,22]],"line_width":10,"line_color":"#D9DAD6","line_rounded":0,"click":0}
 {"page":1,"id":13,"obj":"label","x":52,"y":34,"w":98,"h":16,"text":"WEATHER \u00b7 2H","text_font":12,"text_color":"#626766","align":"left","click":0,"text_letter_space":1}
 {"page":1,"id":14,"obj":"label","x":52,"y":50,"w":98,"h":36,"text":"\ue590","text_font":32,"text_color":"#25282A","align":"left","click":0}
-{"page":1,"id":15,"obj":"label","x":52,"y":88,"w":98,"h":38,"text":"--","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"break","text_letter_space":1}
+{"page":1,"id":15,"obj":"label","x":52,"y":88,"w":98,"h":38,"text":"--","text_font":16,"text_color":"#25282A","align":"left","click":0,"mode":"crop"}
 {"page":1,"id":16,"obj":"label","x":52,"y":128,"w":98,"h":38,"text":"--","text_font":32,"text_color":"#25282A","align":"left","click":0}
 {"page":1,"id":17,"obj":"label","x":52,"y":168,"w":98,"h":16,"text":"FEELS --","text_font":12,"text_color":"#626766","align":"left","click":0,"text_letter_space":1}
 {"page":1,"id":18,"obj":"label","x":52,"y":184,"w":98,"h":16,"text":"HUM --","text_font":12,"text_color":"#626766","align":"left","click":0,"text_letter_space":1}

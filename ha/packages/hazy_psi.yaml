@@ -1,9 +1,12 @@
 # Haze data for the West region (Jurong West) from data.gov.sg.
 # To use another region, replace "west" with north / south / east / central.
+#
+# Refresh: everything every 5 minutes. PM2.5 and PSI also refresh at HH:02 and
+# HH:05, since NEA posts each hourly reading about a minute after the hour.
 
 rest:
   - resource: https://api-open.data.gov.sg/v2/real-time/api/pm25
-    scan_interval: 300
+    scan_interval: 300     # every 5 minutes, plus HH:02 / HH:05 (automation below)
     sensor:
       - name: Haze PM25 1h West
         unique_id: haze_pm25_1h_west
@@ -17,7 +20,7 @@ rest:
         value_template: "{{ value_json.data['items'][0].timestamp[11:16] }}"
 
   - resource: https://api-open.data.gov.sg/v2/real-time/api/psi
-    scan_interval: 300
+    scan_interval: 300     # every 5 minutes, plus HH:02 / HH:05 (automation below)
     sensor:
       - name: Haze PSI 24h West
         unique_id: haze_psi_24h_west
@@ -33,7 +36,7 @@ rest:
 
   # NEA 2-hour forecast for the Jurong West area.
   - resource: https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast
-    scan_interval: 300
+    scan_interval: 300     # every 5 minutes
     sensor:
       - name: NEA Forecast Jurong West
         unique_id: nea_forecast_jurong_west
@@ -100,3 +103,19 @@ template:
             {% if v <= 100 %}#151719
             {% elif v <= 300 %}#F2F2EE
             {% else %}#D4A62A{% endif %}
+
+automation:
+  - id: hazy_haze_hourly
+    alias: Haze - refresh PM2.5 and PSI just after the hour
+    triggers:
+      - trigger: time_pattern
+        minutes: "2"
+      - trigger: time_pattern
+        minutes: "5"
+    actions:
+      # Updating one sensor refreshes its whole REST resource.
+      - action: homeassistant.update_entity
+        target:
+          entity_id:
+            - sensor.haze_pm25_1h_west
+            - sensor.haze_psi_24h_west
