@@ -29,9 +29,9 @@ triggers_update:
   - sensor.nea_forecast_jurong_west
   - sensor.nea_forecast_jurong_west_updated
   - sensor.nea_forecast_jurong_west_until
-  - sensor.home_temperature
-  - sensor.home_apparent_temperature
-  - sensor.home_humidity
+  - sensor.home_679_06_28_temperature
+  - sensor.home_679_06_28_apparent_temperature
+  - sensor.home_679_06_28_humidity
 styles:
   card:
     - background: "#D9DAD6"
@@ -148,10 +148,10 @@ custom_fields:
           ' · TILL ' + s('sensor.nea_forecast_jurong_west_until') + '</span></div>' +
         '<div style="display:flex;align-items:center;min-width:0;">' +
           '<ha-icon icon="' + icon + '" style="--mdc-icon-size:' + v(sz.icon) + ';width:' + v(sz.icon) + ';height:' + v(sz.icon) + ';color:#25282A;margin-right:' + v(1) + ';flex:0 0 auto;"></ha-icon>' +
-          '<span style="font-size:' + v(sz.big) + ';font-weight:700;line-height:1;margin-right:' + v(1.2) + ';white-space:nowrap;flex:0 0 auto;">' + num('sensor.home_temperature', 1) + '°</span>' +
+          '<span style="font-size:' + v(sz.big) + ';font-weight:700;line-height:1;margin-right:' + v(1.2) + ';white-space:nowrap;flex:0 0 auto;">' + num('sensor.home_679_06_28_temperature', 1) + '°</span>' +
           '<div style="flex:1 1 0%;min-width:0;width:0;font-size:' + v(sz.mid) + ';letter-spacing:.05em;line-height:1.15;white-space:normal;word-wrap:break-word;">' + cond + '</div></div>' +
-        '<div style="' + row + small + '"><span>FEELS ' + num('sensor.home_apparent_temperature', 1) + '°</span>' +
-          '<span>HUM ' + num('sensor.home_humidity', 0) + '%</span></div></div>';
+        '<div style="' + row + small + '"><span>FEELS ' + num('sensor.home_679_06_28_apparent_temperature', 1) + '°</span>' +
+          '<span>HUM ' + num('sensor.home_679_06_28_humidity', 0) + '%</span></div></div>';
 
       // ---- haze readout ----
       var readout = function (caption, unit, sensor, band, scale, updated) {

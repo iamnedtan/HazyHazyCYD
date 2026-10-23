@@ -29,9 +29,9 @@ PSI_UPDATED = UPDATED_SENSOR                            # "11:00"
 WX_FORECAST = "sensor.nea_forecast_jurong_west"         # NEA 2-hour forecast text
 WX_UPDATED = "sensor.nea_forecast_jurong_west_updated"  # "11:06"
 WX_UNTIL = "sensor.nea_forecast_jurong_west_until"      # "13:00"
-WX_TEMP = "sensor.home_temperature"
-WX_FEELS = "sensor.home_apparent_temperature"
-WX_HUM = "sensor.home_humidity"
+WX_TEMP = "sensor.home_679_06_28_temperature"
+WX_FEELS = "sensor.home_679_06_28_apparent_temperature"
+WX_HUM = "sensor.home_679_06_28_humidity"
 PM_SCALE = 250   # PM2.5 value that fills all 12 segments
 PSI_SCALE = 300  # PSI value that fills all 12 segments
 

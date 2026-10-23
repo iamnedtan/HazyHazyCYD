@@ -42,13 +42,13 @@ openhasp:
           "text_font": '{{ 16 if ((states("sensor.nea_forecast_jurong_west") | replace(" (Day)", "") | replace(" (Night)", "") | replace(" with Gusty Winds", " + WIND") | upper) | wordwrap(11, break_long_words=false, wrapstring="\n")).split("\n") | length <= 2 and (states("sensor.nea_forecast_jurong_west") | replace(" (Day)", "") | replace(" (Night)", "") | replace(" with Gusty Winds", " + WIND") | upper).split(" ") | map("length") | max <= 11 else 12 }}'
       - obj: "p1b16"
         properties:
-          "text": '{{ states("sensor.home_temperature") | float(0) | round(1) }}°'
+          "text": '{{ states("sensor.home_679_06_28_temperature") | float(0) | round(1) }}°'
       - obj: "p1b17"
         properties:
-          "text": 'FEELS {{ states("sensor.home_apparent_temperature") | float(0) | round(1) }}°'
+          "text": 'FEELS {{ states("sensor.home_679_06_28_apparent_temperature") | float(0) | round(1) }}°'
       - obj: "p1b18"
         properties:
-          "text": 'HUM {{ states("sensor.home_humidity") | int(0) }}%'
+          "text": 'HUM {{ states("sensor.home_679_06_28_humidity") | int(0) }}%'
       - obj: "p1b19"
         properties:
           "text": 'UPD {{ states("sensor.nea_forecast_jurong_west_updated") }}'
