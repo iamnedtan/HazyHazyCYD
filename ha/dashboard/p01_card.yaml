@@ -32,6 +32,8 @@ triggers_update:
   - sensor.home_679_06_28_temperature
   - sensor.home_679_06_28_apparent_temperature
   - sensor.home_679_06_28_humidity
+  - sensor.zhimi_cn_127048394_ma4_temperature_p_3_8
+  - sensor.zhimi_cn_127048394_ma4_relative_humidity_p_3_7
 styles:
   card:
     - background: "#D9DAD6"
@@ -151,7 +153,9 @@ custom_fields:
           '<span style="font-size:' + v(sz.big) + ';font-weight:700;line-height:1;margin-right:' + v(1.2) + ';white-space:nowrap;flex:0 0 auto;">' + num('sensor.home_679_06_28_temperature', 1) + '°</span>' +
           '<div style="flex:1 1 0%;min-width:0;width:0;font-size:' + v(sz.mid) + ';letter-spacing:.05em;line-height:1.15;white-space:normal;word-wrap:break-word;">' + cond + '</div></div>' +
         '<div style="' + row + small + '"><span>FEELS ' + num('sensor.home_679_06_28_apparent_temperature', 1) + '°</span>' +
-          '<span>HUM ' + num('sensor.home_679_06_28_humidity', 0) + '%</span></div></div>';
+          '<span>HUM ' + num('sensor.home_679_06_28_humidity', 0) + '%</span>' +
+          '<span style="color:#25282A;">IN ' + num('sensor.zhimi_cn_127048394_ma4_temperature_p_3_8', 1) + '° ' +
+            num('sensor.zhimi_cn_127048394_ma4_relative_humidity_p_3_7', 0) + '%</span></div></div>';
 
       // ---- haze readout ----
       var readout = function (caption, unit, sensor, band, scale, updated) {

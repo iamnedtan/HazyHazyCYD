@@ -51,10 +51,10 @@ openhasp:
           "text": 'HUM {{ states("sensor.home_679_06_28_humidity") | int(0) }}%'
       - obj: "p1b19"
         properties:
-          "text": 'UPD {{ states("sensor.nea_forecast_jurong_west_updated") }}'
+          "text": '{{ states("sensor.nea_forecast_jurong_west_updated") }}-{{ states("sensor.nea_forecast_jurong_west_until") }}'
       - obj: "p1b20"
         properties:
-          "text": 'TILL {{ states("sensor.nea_forecast_jurong_west_until") }}'
+          "text": 'IN {{ states("sensor.zhimi_cn_127048394_ma4_temperature_p_3_8") | float(0) | round(1) }}° {{ states("sensor.zhimi_cn_127048394_ma4_relative_humidity_p_3_7") | int(0) }}%'
       - obj: "p1b37"
         properties:
           "text": '{{ states("sensor.haze_pm25_updated") }}'

@@ -32,6 +32,8 @@ WX_UNTIL = "sensor.nea_forecast_jurong_west_until"      # "13:00"
 WX_TEMP = "sensor.home_679_06_28_temperature"
 WX_FEELS = "sensor.home_679_06_28_apparent_temperature"
 WX_HUM = "sensor.home_679_06_28_humidity"
+IN_TEMP = "sensor.zhimi_cn_127048394_ma4_temperature_p_3_8"         # living room, indoor
+IN_HUM = "sensor.zhimi_cn_127048394_ma4_relative_humidity_p_3_7"
 PM_SCALE = 250   # PM2.5 value that fills all 12 segments
 PSI_SCALE = 300  # PSI value that fills all 12 segments
 
@@ -240,8 +242,8 @@ def weather_panel(page, x, y, w, h):
     temp = label(page, ix, y + 98, iw, 38, "--", font=32)
     feels = label(page, ix, y + 138, iw, 16, "FEELS --", color=TEXT_SECONDARY, text_letter_space=1)
     hum = label(page, ix, y + 154, iw, 16, "HUM --", color=TEXT_SECONDARY, text_letter_space=1)
-    upd = label(page, ix, y + 172, iw, 16, "", color=TEXT_SECONDARY, text_letter_space=1)
-    till = label(page, ix, y + 188, iw, 16, "", color=TEXT_SECONDARY, text_letter_space=1)
+    upd = label(page, ix, y + 188, iw, 16, "", color=TEXT_SECONDARY, text_letter_space=1)
+    indoor = label(page, ix, y + 172, iw, 16, "IN --", text_letter_space=1)
 
     f = f'states("{WX_FORECAST}")'
     chain = "".join(f'{{% elif "{k}" in f %}}{v}' for k, v in WX_ICONS)[2:].replace(" elif", " if", 1)
@@ -261,8 +263,10 @@ def weather_panel(page, x, y, w, h):
     bind(temp, {"text": f'{{{{ states("{WX_TEMP}") | float(0) | round(1) }}}}°'})
     bind(feels, {"text": f'FEELS {{{{ states("{WX_FEELS}") | float(0) | round(1) }}}}°'})
     bind(hum, {"text": f'HUM {{{{ states("{WX_HUM}") | int(0) }}}}%'})
-    bind(upd, {"text": f'UPD {{{{ states("{WX_UPDATED}") }}}}'})
-    bind(till, {"text": f'TILL {{{{ states("{WX_UNTIL}") }}}}'})
+    # Forecast period on one line ("14:36-16:30") to make room for the indoor row.
+    bind(upd, {"text": f'{{{{ states("{WX_UPDATED}") }}}}-{{{{ states("{WX_UNTIL}") }}}}'})
+    bind(indoor, {"text": (f'IN {{{{ states("{IN_TEMP}") | float(0) | round(1) }}}}°'
+                           f' {{{{ states("{IN_HUM}") | int(0) }}}}%')})
 
 
 def readout(page, x, y, w, caption, unit, sensor, band, scale, updated):
